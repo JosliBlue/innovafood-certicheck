@@ -60,6 +60,12 @@
                     <span class="iconify text-base" data-icon="line-md:login"></span> Iniciar sesión
                 </button>
             </form>
+
+            <div class="mt-5 pt-4 border-t border-gray-100/60 flex justify-center">
+                <a href="{{ route('consulta') }}" class="text-xs font-bold text-primary/60 hover:text-primary flex items-center gap-1.5 align-middle transition-all">
+                    <span class="iconify text-sm" data-icon="line-md:arrow-left"></span> Consultar Cursos
+                </a>
+            </div>
         </div>
     </div>
 @endsection

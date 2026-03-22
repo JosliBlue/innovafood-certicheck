@@ -20,6 +20,6 @@ class VerifyGuest
             return $next($request);
         }
 
-        return redirect()->route('home');
+        return redirect()->route('clients.index');
     }
 }

@@ -69,9 +69,26 @@
         {{-- Main Content --}}
         <main class="flex-1 max-w-6xl w-full mx-auto px-6 pt-16 pb-12 z-10">
             {{-- Toolbar Actions --}}
-            <div class="flex justify-end mb-6">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                {{-- Search Form --}}
+                <form action="{{ route('clients.index') }}" method="GET" class="w-full sm:max-w-md relative flex items-center">
+                    <span class="iconify absolute left-4 top-1/2 -translate-y-1/2 text-primary/40 text-lg pointer-events-none w-6 h-6" data-icon="line-md:search"></span>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar por cédula o nombre..." class="w-full pl-11 pr-24 py-3 bg-white border border-gray-100/80 rounded-2xl text-xs font-semibold text-gray-800 placeholder-gray-400 shadow-[0_10px_30px_rgba(0,0,0,0.02)] focus:outline-none focus:ring-4 focus:ring-primary/5 focus:border-primary/40 transition-all">
+                    
+                    <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+                        @if(request('search'))
+                            <a href="{{ route('clients.index') }}" class="p-1 px-1.5 rounded-xl bg-gray-50 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors" title="Limpiar">
+                                <span class="iconify text-sm w-6 h-6" data-icon="line-md:close"></span>
+                            </a>
+                        @endif
+                        <button type="submit" class="bg-primary hover:bg-primary-hover text-white p-2 rounded-xl font-bold shadow-sm shadow-primary/10 hover:shadow transition-all flex items-center justify-center">
+                            <span class="iconify text-sm w-6 h-6" data-icon="line-md:search"></span>
+                        </button>
+                    </div>
+                </form>
+
                 <a href="{{ route('clients.create') }}"
-                    class="bg-primary hover:bg-primary-hover text-white py-2.5 px-6 rounded-2xl font-bold shadow-md shadow-primary/10 hover:shadow-lg hover:shadow-primary/20 transition-all flex items-center gap-2">
+                    class="bg-primary hover:bg-primary-hover text-white py-2.5 px-6 rounded-2xl font-bold shadow-md shadow-primary/10 hover:shadow-lg hover:shadow-primary/20 transition-all flex items-center gap-2 w-full sm:w-auto justify-center">
                     <span class="iconify text-lg" data-icon="line-md:plus"></span> Nuevo cliente
                 </a>
             </div>

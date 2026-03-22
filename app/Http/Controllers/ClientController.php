@@ -11,9 +11,20 @@ use Illuminate\View\View;
 
 class ClientController extends Controller
 {
-    public function index(): View
+    public function index(\Illuminate\Http\Request $request): View
     {
-        $clients = Client::query()->orderBy('last_names')->get();
+        $query = Client::query();
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('id_card', 'like', '%' . $search . '%')
+                  ->orWhere('first_names', 'like', '%' . $search . '%')
+                  ->orWhere('last_names', 'like', '%' . $search . '%');
+            });
+        }
+
+        $clients = $query->orderBy('last_names')->get();
 
         return view('clients.index', compact('clients'));
     }
