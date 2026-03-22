@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\LookupController;
 use App\Http\Controllers\SessionController;
 use App\Http\Middleware\VerifyAuth;
 use App\Http\Middleware\VerifyGuest;
@@ -10,8 +11,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return Auth::check()
         ? redirect()->route('clients.index')
-        : redirect()->route('login');
+        : redirect()->route('consulta');
 });
+
+Route::get('/consulta', [LookupController::class, 'index'])->name('consulta');
+Route::post('/consulta/buscar', [LookupController::class, 'search'])->name('lookup.search');
 
 Route::middleware(VerifyGuest::class)->group(function () {
     Route::get('/login', [SessionController::class, 'toView'])->name('login');
