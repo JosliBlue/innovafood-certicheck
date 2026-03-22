@@ -2,15 +2,17 @@
 
 <img src="./public/InnovaFood_Logo.png" width="160" alt="InnovaFood Logo" />
 
-<span style="font-size: 30px; font-weight: bold; color: #4d4341;">CertiCheck</span>
+<span>CertiCheck - InnovaFood G.C</span>
 
-<p><span style="font-weight: bold">INNOVAFOOD G.C - </span>Gestión y consulta de historial de cursos de forma simple y segura.</p>
+<p>Gestión y consulta de historial de cursos de forma simple y segura.</p>
 
 <img src="https://img.shields.io/badge/Laravel-13.x-f05340?logo=laravel&logoColor=white" alt="Laravel">
 <img src="https://img.shields.io/badge/PHP-8.3+-777bb4?logo=php&logoColor=white" alt="PHP">
 <img src="https://img.shields.io/badge/TailwindCSS-3.4-06B6D4?logo=tailwindcss&logoColor=white" alt="TailwindCSS">
 
 </div>
+
+---
 
 <div align="center">
   <img src="./public/github_preview/preview_client.webp" width="100%" alt="Vista previa sección cliente">
