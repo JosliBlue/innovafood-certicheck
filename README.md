@@ -37,9 +37,41 @@
 
 </div>
 
+## 🔐 Variables de Entorno Principales
+```env
+APP_NAME="Nombre app"
+APP_URL=http://localhost:8000
+APP_KEY=
+APP_ENV=local
+APP_DEBUG=true
+
+APP_TIMEZONE=America/Guayaquil
+APP_LOCALE=es
+
+BCRYPT_ROUNDS=12
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nombre_bd
+DB_USERNAME=
+DB_PASSWORD=
+
+CACHE_STORE=file
+SESSION_DRIVER=cookie
+QUEUE_CONNECTION=database
+BROADCAST_CONNECTION=log
+
+ADMIN_EMAIL=nombre_admin@gmail.com
+ADMIN_PASSWORD=password
+```
+
 ## 🛠️ Comandos Útiles
 
 ```bash
+# Descarga todas las dependencias
+composer install
+
 # Preparar entorno desde cero (incluye migrate:fresh --seed)
 composer run prepare
 
@@ -48,9 +80,6 @@ composer run clear
 
 # Servidor de desarrollo
 composer run dev
-
-# Ejecutar tests
-php artisan test --compact
 ```
 
 ## 📝 Notas
