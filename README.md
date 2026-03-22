@@ -2,7 +2,7 @@
 
 <img src="./public/InnovaFood_Logo.png" width="160" alt="InnovaFood Logo" />
 
-<span style="font-size: 20px; font-weight: bold; color: #4d4341;">CertiCheck</span>
+<span style="font-size: 30px; font-weight: bold; color: #4d4341;">CertiCheck</span>
 
 <p><span style="font-weight: bold">INNOVAFOOD G.C - </span>Gestión y consulta de historial de cursos de forma simple y segura.</p>
 
