@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\SessionController;
 use App\Http\Middleware\VerifyAuth;
 use App\Http\Middleware\VerifyGuest;
@@ -8,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return Auth::check()
-        ? redirect()->route('home')
+        ? redirect()->route('clients.index')
         : redirect()->route('login');
 });
 
@@ -18,6 +19,12 @@ Route::middleware(VerifyGuest::class)->group(function () {
 });
 
 Route::middleware(VerifyAuth::class)->group(function () {
-    Route::view('/home', 'home')->name('home');
     Route::post('/logout', [SessionController::class, 'logout'])->name('logout');
+
+    Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
+    Route::get('/clients/create', [ClientController::class, 'create'])->name('clients.create');
+    Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
+    Route::get('/clients/{client}/edit', [ClientController::class, 'edit'])->name('clients.edit');
+    Route::put('/clients/{client}', [ClientController::class, 'update'])->name('clients.update');
+    Route::delete('/clients/{client}', [ClientController::class, 'destroy'])->name('clients.destroy');
 });

@@ -25,7 +25,7 @@ class SessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('home'));
+        return redirect()->intended(route('clients.index'));
     }
 
     public function logout(Request $request): RedirectResponse

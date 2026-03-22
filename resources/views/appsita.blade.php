@@ -8,6 +8,8 @@
 
     <title>{{ config('app.name') }} - @yield('title')</title>
 
+    <link rel="icon" href="/innova-food.ico" />
+
     <script src="{{ asset('js/tailwind-3_4_16.js') }}"></script>
     <script src="{{ asset('js/iconify.min.js') }}"></script>
     <script>
