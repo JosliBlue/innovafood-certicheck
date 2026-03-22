@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateClientRequest extends FormRequest
 {
@@ -16,7 +15,7 @@ class UpdateClientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id_card' => ['required', 'string', 'max:20', Rule::unique('clients', 'id_card')->ignore($this->route('client'))],
+            'id_card' => ['required', 'string', 'max:20'],
             'last_names' => ['required', 'string', 'max:100'],
             'first_names' => ['required', 'string', 'max:100'],
             'birthday' => ['required', 'date'],
@@ -31,7 +30,6 @@ class UpdateClientRequest extends FormRequest
     {
         return [
             'id_card.required' => 'La cédula es obligatoria.',
-            'id_card.unique' => 'Ya existe un cliente con esa cédula.',
             'last_names.required' => 'Los apellidos son obligatorios.',
             'first_names.required' => 'Los nombres son obligatorios.',
             'birthday.required' => 'La fecha de nacimiento es obligatoria.',

@@ -77,99 +77,82 @@
             </div>
 
             @if ($clients->isEmpty())
-                <section
-                    class="bg-white rounded-2xl border border-gray-100 shadow-sm p-16 flex flex-col items-center justify-center text-gray-400">
+                <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-16 flex flex-col items-center justify-center text-gray-400">
                     <span class="iconify w-12 h-12 mb-3 text-primary/20" data-icon="line-md:account-small"></span>
                     <p class="text-sm font-bold text-gray-500">No hay clientes registrados aún.</p>
                 </section>
             @else
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach ($clients as $client)
-                        @php
-                            $isExpired = $client->expires_at->isPast();
-                            $styles = $isExpired ? [
-                                'bg' => 'bg-orange-500 shadow-orange-100',
-                                'icon' => 'line-md:alert-circle',
-                                'text' => 'text-orange-600',
-                                'label' => 'Caducado'
-                            ] : [
-                                'bg' => 'bg-green-500 shadow-green-100',
-                                'icon' => 'line-md:check-all',
-                                'text' => 'text-green-600',
-                                'label' => 'Vigente'
-                            ];
-                        @endphp
-
-                        <div
-                            class="bg-white rounded-3xl border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.05)] hover:border-white transition-all duration-300 flex flex-col overflow-hidden group">
-                            {{-- Card Header --}}
-                            <div class="p-6 flex-1">
-                                <div class="flex items-center gap-4 mb-5 pb-4 border-b border-gray-100/60">
-                                    <div
-                                        class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 {{ $styles['bg'] }} text-white shadow-sm">
-                                        <span class="iconify text-xl" data-icon="line-md:account"></span>
-                                    </div>
-                                    <div>
-                                        <h4
-                                            class="font-black text-gray-900 text-sm md:text-base leading-snug group-hover:text-primary transition-colors">
-                                            {{ $client->full_name }}
-                                        </h4>
-                                        <p class="text-[11px] font-extrabold text-gray-400 uppercase tracking-widest mt-0.5">C.I.
-                                            {{ $client->id_card }}</p>
-                                    </div>
-                                </div>
-
-                                {{-- Card Details Grid --}}
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <span
-                                            class="text-[10px] font-extrabold text-primary/60 uppercase tracking-widest block mb-1">Curso</span>
-                                        <p class="text-xs font-extrabold text-gray-800 leading-snug">{{ $client->course_name }}</p>
-                                    </div>
-                                    <div>
-                                        <span
-                                            class="text-[10px] font-extrabold text-primary/60 uppercase tracking-widest block mb-1">Suscripción</span>
-                                        <p class="text-xs font-bold text-gray-500 capitalize">{{ $client->subscription_type }}</p>
-                                    </div>
-                                    <div>
-                                        <span
-                                            class="text-[10px] font-extrabold text-primary/60 uppercase tracking-widest block mb-1">Estado</span>
-                                        <span
-                                            class="inline-flex text-[11px] font-black uppercase tracking-wider {{ $styles['text'] }}">
-                                            {{ $styles['label'] }}
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span
-                                            class="text-[10px] font-extrabold text-primary/60 uppercase tracking-widest block mb-1">Vence</span>
-                                        <time
-                                            class="text-xs font-black text-gray-800 font-mono">{{ $client->expires_at->format('d/m/Y') }}</time>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {{-- Card Footer Actions --}}
-                            <div class="border-t border-gray-100/60 flex divide-x divide-gray-100/60">
-                                <a href="{{ route('clients.edit', $client) }}"
-                                    class="flex-1 flex items-center justify-center gap-2 py-5 bg-primary-light/30 hover:bg-primary-light text-primary/60 hover:text-primary font-black text-xs uppercase tracking-wider transition-colors"
-                                    title="Editar">
-                                    <span class="iconify text-base w-7 h-7" data-icon="line-md:pencil"></span>
-                                    Editar
-                                </a>
-                                <form method="POST" action="{{ route('clients.destroy', $client) }}"
-                                    onsubmit="return confirm('¿Eliminar a {{ $client->full_name }}?')" class="flex-1 flex">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="w-full flex items-center justify-center gap-2 py-5 bg-red-50/20 hover:bg-red-50 text-red-500 hover:text-red-600 font-black text-xs uppercase tracking-wider transition-colors"
-                                        title="Eliminar">
-                                        <span class="iconify text-base w-7 h-7" data-icon="line-md:remove"></span>
-                                        Eliminar
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    @endforeach
+                <div class="bg-white rounded-3xl border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.02)] overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50/50 border-b border-gray-100/60">
+                                    <th class="px-6 py-4 text-[11px] font-extrabold text-primary/60 uppercase tracking-widest">Cliente</th>
+                                    <th class="px-6 py-4 text-[11px] font-extrabold text-primary/60 uppercase tracking-widest">Curso</th>
+                                    <th class="px-6 py-4 text-[11px] font-extrabold text-primary/60 uppercase tracking-widest">Suscripción</th>
+                                    <th class="px-6 py-4 text-[11px] font-extrabold text-primary/60 uppercase tracking-widest">Estado</th>
+                                    <th class="px-6 py-4 text-[11px] font-extrabold text-primary/60 uppercase tracking-widest text-right">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-50 border-t border-gray-100/60">
+                                @foreach ($clients as $client)
+                                    @php
+                                        $isExpired = $client->expires_at->isPast();
+                                        $styles = $isExpired ? [
+                                            'bg' => 'bg-orange-500 shadow-orange-100',
+                                            'text' => 'text-orange-600',
+                                            'label' => 'Caducado'
+                                        ] : [
+                                            'bg' => 'bg-green-500 shadow-green-100',
+                                            'text' => 'text-green-600',
+                                            'label' => 'Vigente'
+                                        ];
+                                    @endphp
+                                    <tr class="hover:bg-primary-light/10 transition-colors group">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 rounded-xl flex items-center justify-center font-black text-white shadow-sm {{ $styles['bg'] }} shrink-0">
+                                                    {{ substr($client->first_names, 0, 1) }}{{ substr($client->last_names, 0, 1) }}
+                                                </div>
+                                                <div>
+                                                    <p class="font-bold text-gray-900 group-hover:text-primary transition-colors leading-snug">{{ $client->full_name }}</p>
+                                                    <p class="text-[10px] text-gray-400 font-extrabold tracking-wider mt-0.5">C.I. {{ $client->id_card }}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <p class="text-xs font-bold text-gray-700 leading-snug">{{ $client->course_name }}</p>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span class="inline-flex text-[10px] font-bold text-gray-500 capitalize bg-gray-100 px-2 py-0.5 rounded-lg">
+                                                {{ $client->subscription_type }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span class="inline-flex text-[11px] font-black uppercase tracking-wider {{ $styles['text'] }}">
+                                                {{ $styles['label'] }}
+                                            </span>
+                                            <p class="text-[10px] font-bold text-gray-400 font-mono mt-0.5">{{ $client->expires_at->format('d/m/Y') }}</p>
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <div class="flex justify-end gap-2">
+                                                <a href="{{ route('clients.edit', $client) }}" class="p-2 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white shadow-sm transition-all" title="Editar">
+                                                    <span class="iconify text-lg" data-icon="line-md:pencil"></span>
+                                                </a>
+                                                <form method="POST" action="{{ route('clients.destroy', $client) }}" onsubmit="return confirm('¿Eliminar a {{ $client->full_name }}?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="p-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white shadow-sm transition-all" title="Eliminar">
+                                                        <span class="iconify text-lg" data-icon="line-md:remove"></span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             @endif
         </main>
