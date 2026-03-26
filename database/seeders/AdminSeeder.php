@@ -5,15 +5,15 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
-class DatabaseSeeder extends Seeder
+class AdminSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     public function run(): void
     {
-        $this->call([
-            AdminSeeder::class,
+        User::create([
+            'email'    => env('ADMIN_EMAIL'),
+            'password' => Hash::make(env('ADMIN_PASSWORD')),
         ]);
     }
 }
