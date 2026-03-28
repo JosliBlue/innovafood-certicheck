@@ -26,7 +26,7 @@ class LookupController extends Controller
 
         $records = Client::query()
             ->where('id_card', $cedula)
-            ->orderBy('expires_at', 'desc')
+            ->orderBy('finished_at', 'desc')
             ->get();
 
         $person = $records->first();

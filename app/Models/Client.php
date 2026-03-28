@@ -11,18 +11,15 @@ class Client extends Model
         'id_card',
         'last_names',
         'first_names',
-        'birthday',
         'course_name',
-        'subscription_type',
-        'expires_at',
+        'finished_at',
     ];
 
     protected function casts(): array
     {
         return [
             'id_card' => 'string',
-            'birthday' => 'date',
-            'expires_at' => 'date',
+            'finished_at' => 'date',
         ];
     }
 

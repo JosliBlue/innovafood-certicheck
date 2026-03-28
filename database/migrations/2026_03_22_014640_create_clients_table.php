@@ -12,16 +12,14 @@ return new class extends Migration
             $table->id();
             // Datos personales
             $table->string('id_card');
-            $table->date('birthday')->nullable();
             $table->string('last_names');
             $table->string('first_names');
 
-            // Datos del curso/suscripción
+            // Datos del curso
             $table->string('course_name');
-            $table->string('subscription_type');
 
             // Fechas
-            $table->date('expires_at');
+            $table->date('finished_at');
 
             $table->timestamps();
         });

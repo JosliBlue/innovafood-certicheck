@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 
 <head>
     <meta charset="utf-8">
@@ -8,7 +8,7 @@
 
     <title>{{ config('app.name') }} — @yield('title')</title>
 
-    <link rel="icon" href="/innova-food.ico" />
+    <link rel="icon" href="{{ asset('innova-food.ico') }}" />
     
     <script src="{{ asset('js/tailwind-3_4_16.js') }}"></script>
     <script src="{{ asset('js/iconify.min.js') }}"></script>

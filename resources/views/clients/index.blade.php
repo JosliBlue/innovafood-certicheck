@@ -42,7 +42,7 @@
             {{-- Stats Floating Section (Replicating search absolute bottom frame) --}}
             @php
                 $total = $clients->count();
-                $expired = $clients->filter(fn($c) => $c->expires_at->isPast())->count();
+                $expired = $clients->filter(fn($c) => $c->finished_at->copy()->addYear()->isPast())->count();
                 $active = $total - $expired;
             @endphp
             <div class="absolute left-1/2 -bottom-10 -translate-x-1/2 w-full max-w-xl px-4 z-20">
@@ -106,7 +106,6 @@
                                 <tr class="bg-gray-50/50 border-b border-gray-100/60">
                                     <th class="px-6 py-4 text-[11px] font-extrabold text-primary/60 uppercase tracking-widest">Cliente</th>
                                     <th class="px-6 py-4 text-[11px] font-extrabold text-primary/60 uppercase tracking-widest">Curso</th>
-                                    <th class="px-6 py-4 text-[11px] font-extrabold text-primary/60 uppercase tracking-widest">Suscripción</th>
                                     <th class="px-6 py-4 text-[11px] font-extrabold text-primary/60 uppercase tracking-widest">Estado</th>
                                     <th class="px-6 py-4 text-[11px] font-extrabold text-primary/60 uppercase tracking-widest text-right">Acciones</th>
                                 </tr>
@@ -114,11 +113,11 @@
                             <tbody class="divide-y divide-gray-50 border-t border-gray-100/60">
                                 @foreach ($clients as $client)
                                     @php
-                                        $isExpired = $client->expires_at->isPast();
+                                        $isExpired = $client->finished_at->copy()->addYear()->isPast();
                                         $styles = $isExpired ? [
                                             'bg' => 'bg-orange-500 shadow-orange-100',
                                             'text' => 'text-orange-600',
-                                            'label' => 'Caducado'
+                                            'label' => 'Retomar Certificación'
                                         ] : [
                                             'bg' => 'bg-green-500 shadow-green-100',
                                             'text' => 'text-green-600',
@@ -141,15 +140,10 @@
                                             <p class="text-xs font-bold text-gray-700 leading-snug">{{ $client->course_name }}</p>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <span class="inline-flex text-[10px] font-bold text-gray-500 capitalize bg-gray-100 px-2 py-0.5 rounded-lg">
-                                                {{ $client->subscription_type }}
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4">
                                             <span class="inline-flex text-[11px] font-black uppercase tracking-wider {{ $styles['text'] }}">
                                                 {{ $styles['label'] }}
                                             </span>
-                                            <p class="text-[10px] font-bold text-gray-400 font-mono mt-0.5">{{ $client->expires_at->format('d/m/Y') }}</p>
+                                            <p class="text-[10px] font-bold text-gray-400 font-mono mt-0.5">{{ $client->finished_at->format('d/m/Y') }}</p>
                                         </td>
                                         <td class="px-6 py-4 text-right">
                                             <div class="flex justify-end gap-2">

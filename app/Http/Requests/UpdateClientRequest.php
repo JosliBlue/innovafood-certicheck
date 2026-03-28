@@ -16,12 +16,10 @@ class UpdateClientRequest extends FormRequest
     {
         return [
             'id_card' => ['required', 'string', 'max:20'],
-            'last_names' => ['required', 'string', 'max:100'],
-            'first_names' => ['required', 'string', 'max:100'],
-            'birthday' => ['required', 'date'],
+            'last_names' => ['required', 'string', 'max:150'],
+            'first_names' => ['required', 'string', 'max:150'],
             'course_name' => ['required', 'string', 'max:150'],
-            'subscription_type' => ['required', 'string', 'max:100'],
-            'expires_at' => ['required', 'date', 'after:birthday'],
+            'finished_at' => ['required', 'date'],
         ];
     }
 
@@ -32,12 +30,9 @@ class UpdateClientRequest extends FormRequest
             'id_card.required' => 'La cédula es obligatoria.',
             'last_names.required' => 'Los apellidos son obligatorios.',
             'first_names.required' => 'Los nombres son obligatorios.',
-            'birthday.required' => 'La fecha de nacimiento es obligatoria.',
-            'birthday.date' => 'La fecha de nacimiento no es válida.',
             'course_name.required' => 'El nombre del curso es obligatorio.',
-            'subscription_type.required' => 'El tipo de suscripción es obligatorio.',
-            'expires_at.required' => 'La fecha de vencimiento es obligatoria.',
-            'expires_at.after' => 'La fecha de vencimiento debe ser posterior a la fecha de nacimiento.',
+            'finished_at.required' => 'La fecha de finalización es obligatoria.',
+            'finished_at.date' => 'La fecha de finalización no es válida.',
         ];
     }
 }

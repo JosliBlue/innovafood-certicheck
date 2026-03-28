@@ -33,16 +33,7 @@
     @enderror
 </div>
 
-{{-- Fecha de nacimiento --}}
-<div class="flex flex-col gap-1">
-    <label for="birthday" class="text-xs font-bold text-primary uppercase tracking-wide">Fecha de nacimiento</label>
-    <input id="birthday" type="date" name="birthday"
-        value="{{ old('birthday', isset($client) ? $client->birthday->format('Y-m-d') : '') }}"
-        class="border {{ $errors->has('birthday') ? 'border-red-400' : 'border-gray-200' }} rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
-    @error('birthday')
-        <p class="text-red-500 text-xs">{{ $message }}</p>
-    @enderror
-</div>
+
 
 {{-- Nombre del curso --}}
 <div class="flex flex-col gap-1">
@@ -54,25 +45,13 @@
     @enderror
 </div>
 
-{{-- Tipo de suscripción --}}
+{{-- Fecha de finalización --}}
 <div class="flex flex-col gap-1">
-    <label for="subscription_type" class="text-xs font-bold text-primary uppercase tracking-wide">Tipo de
-        suscripción</label>
-    <input id="subscription_type" type="text" name="subscription_type"
-        value="{{ old('subscription_type', $client->subscription_type ?? '') }}"
-        class="border {{ $errors->has('subscription_type') ? 'border-red-400' : 'border-gray-200' }} rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
-    @error('subscription_type')
-        <p class="text-red-500 text-xs">{{ $message }}</p>
-    @enderror
-</div>
-
-{{-- Fecha de vencimiento --}}
-<div class="flex flex-col gap-1">
-    <label for="expires_at" class="text-xs font-bold text-primary uppercase tracking-wide">Fecha de vencimiento</label>
-    <input id="expires_at" type="date" name="expires_at"
-        value="{{ old('expires_at', isset($client) ? $client->expires_at->format('Y-m-d') : '') }}"
-        class="border {{ $errors->has('expires_at') ? 'border-red-400' : 'border-gray-200' }} rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
-    @error('expires_at')
+    <label for="finished_at" class="text-xs font-bold text-primary uppercase tracking-wide">Fecha de finalización del curso</label>
+    <input id="finished_at" type="date" name="finished_at"
+        value="{{ old('finished_at', isset($client) ? $client->finished_at->format('Y-m-d') : now()->format('Y-m-d')) }}"
+        class="border {{ $errors->has('finished_at') ? 'border-red-400' : 'border-gray-200' }} rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
+    @error('finished_at')
         <p class="text-red-500 text-xs">{{ $message }}</p>
     @enderror
 </div>
