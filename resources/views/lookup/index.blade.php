@@ -11,167 +11,54 @@
     <style>
         /* ANIMACIONES FALTANTES EN LA CONFIGURACIÓN DE APPSITA */
         @keyframes fadeInUp {
-            0% {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            0% { opacity: 0; transform: translateY(50px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
-        .animate-fade-in {
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .animate-fade-in-delay {
-            animation: fadeInUp 0.8s ease-out 0.2s backwards;
-        }
-
-        .animate-fade-in-delay-2 {
-            animation: fadeInUp 0.8s ease-out 0.4s backwards;
-        }
-
-        .animate-fade-in-delay-3 {
-            animation: fadeInUp 0.8s ease-out 0.6s backwards;
-        }
+        .animate-fade-in { animation: fadeInUp 0.8s ease-out; }
+        .animate-fade-in-delay { animation: fadeInUp 0.8s ease-out 0.2s backwards; }
+        .animate-fade-in-delay-2 { animation: fadeInUp 0.8s ease-out 0.4s backwards; }
+        .animate-fade-in-delay-3 { animation: fadeInUp 0.8s ease-out 0.6s backwards; }
 
         /* CSS DEL CARRUSEL Y PÁGINA */
-        body {
-            background-color: #faf8f7;
-            color: #4d4341;
-        }
+        body { background-color: #faf8f7; color: #4d4341; }
+        .carousel-container { position: relative; width: 100%; height: 100vh; }
+        .carousel-slide { display: none; }
+        .carousel-slide.active { display: block; animation: fadeIn 1s ease-in-out; }
 
-        .carousel-container {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-        }
-
-        .carousel-slide {
-            display: none;
-        }
-
-        .carousel-slide.active {
-            display: block;
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideInUp {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideInUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         .carousel-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(77, 67, 65, 0.7);
-            color: white;
-            border: none;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            z-index: 10;
-            backdrop-filter: blur(5px);
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(77, 67, 65, 0.7); color: white; border: none;
+            width: 60px; height: 60px; border-radius: 50%; cursor: pointer;
+            font-size: 24px; display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s ease; z-index: 10; backdrop-filter: blur(5px);
         }
-
-        .carousel-btn:hover {
-            background: rgba(77, 67, 65, 0.95);
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .carousel-prev {
-            left: 20px;
-        }
-
-        .carousel-next {
-            right: 20px;
-        }
+        .carousel-btn:hover { background: rgba(77, 67, 65, 0.95); transform: translateY(-50%) scale(1.1); }
+        .carousel-prev { left: 20px; }
+        .carousel-next { right: 20px; }
 
         .carousel-indicators {
-            position: absolute;
-            bottom: 120px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 12px;
-            z-index: 10;
+            position: absolute; bottom: 120px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 12px; z-index: 10;
         }
-
         .indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid rgba(255, 255, 255, 0.8);
+            width: 12px; height: 12px; border-radius: 50%; background: rgba(255, 255, 255, 0.5);
+            cursor: pointer; transition: all 0.3s ease; border: 2px solid rgba(255, 255, 255, 0.8);
         }
+        .indicator:hover { background: rgba(255, 255, 255, 0.8); transform: scale(1.2); }
+        .indicator.active { background: white; width: 40px; border-radius: 6px; }
 
-        .indicator:hover {
-            background: rgba(255, 255, 255, 0.8);
-            transform: scale(1.2);
-        }
-
-        .indicator.active {
-            background: white;
-            width: 40px;
-            border-radius: 6px;
-        }
-
-        .carousel-slide img {
-            transition: transform 8s ease-out;
-            filter: brightness(1.1);
-        }
-
-        .carousel-slide.active img {
-            transform: scale(1.05);
-        }
+        .carousel-slide img { transition: transform 8s ease-out; filter: brightness(1.1); }
+        .carousel-slide.active img { transform: scale(1.05); }
 
         @media (max-width: 768px) {
-            .carousel-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 18px;
-            }
-
-            .carousel-prev {
-                left: 10px;
-            }
-
-            .carousel-next {
-                right: 10px;
-            }
-
-            .carousel-indicators {
-                bottom: 180px;
-            }
+            .carousel-btn { width: 45px; height: 45px; font-size: 18px; }
+            .carousel-prev { left: 10px; }
+            .carousel-next { right: 10px; }
+            .carousel-indicators { bottom: 180px; }
         }
     </style>
 
@@ -185,6 +72,15 @@
                     </a>
                     <div class="text-base sm:text-xl md:text-2xl font-black text-primary tracking-tight leading-tight truncate">{{ config('app.name', 'Innova Food G.C') }}</div>
                 </div>
+                
+                <div class="hidden lg:flex items-center space-x-6 mx-auto absolute left-1/2 transform -translate-x-1/2 pt-2">
+                    <a href="#inicio" class="text-[#4d4341] hover:text-[#3a3230] transition duration-300 font-semibold">Inicio</a>
+                    <a href="#nosotros" class="text-[#4d4341] hover:text-[#3a3230] transition duration-300 font-semibold">Nosotros</a>
+                    <a href="#servicios" class="text-[#4d4341] hover:text-[#3a3230] transition duration-300 font-semibold">Servicios</a>
+                    <a href="#blog" class="text-[#4d4341] hover:text-[#3a3230] transition duration-300 font-semibold">Sabías Que</a>
+                    <a href="#contacto" class="text-[#4d4341] hover:text-[#3a3230] transition duration-300 font-semibold">Contacto</a>
+                </div>
+
                 <div class="flex items-center space-x-3 md:space-x-6 shrink-0 ml-2">
                     @auth
                         <a href="#buscador" class="text-sm md:text-lg font-bold text-gray-500 hidden sm:block hover:text-primary transition duration-300">Registro institucional</a>
@@ -274,7 +170,223 @@
                 <span class="indicator" onclick="currentSlide(2)"></span>
             </div>
         </div>
+    </section>
 
+    <!-- Nosotros -->
+    <section id="nosotros" class="py-20 bg-white">
+        <div class="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-[#4d4341] mb-4">Sobre Nosotros</h2>
+                <div class="w-24 h-1 bg-[#4d4341] mx-auto mb-8"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Somos un <strong class="text-[#4d4341]">centro de capacitaciones alimentarias</strong> comprometido con la formación de profesionales de excelencia en el sector alimentario.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h3 class="text-3xl font-bold text-[#4d4341] mb-6">Nuestra Experiencia</h3>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        En <strong class="text-[#4d4341]">Innova Food G.C.</strong> contamos con <strong class="text-[#4d4341]">5 años de experiencia</strong> en el sector alimentario, ofreciendo servicios especializados en capacitación, asesoría y cumplimiento de normativas sanitarias.
+                    </p>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        Desde el <strong class="text-[#4d4341]">2020</strong> hemos acompañado a diversas empresas y profesionales del país en la mejora de sus procesos, garantizando la inocuidad y calidad de los alimentos que producen.
+                    </p>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        Durante este tiempo, hemos capacitado a más de <strong class="text-[#4d4341]">700 estudiantes</strong>, formando personal competente en Buenas Prácticas de Manufactura (BPM), manipulación higiénica de alimentos e inocuidad alimentaria.
+                    </p>
+                    <div class="bg-gray-50 p-6 rounded-lg border-l-4 border-[#4d4341]">
+                        <h4 class="font-bold text-[#4d4341] mb-2">Nuestro Compromiso</h4>
+                        <p class="text-gray-700">"Hacerlo tú mismo es mejor" - Transformar la industria alimentaria a través de la educación de calidad, cumplimiento normativo y la innovación constante.</p>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-award text-[#4d4341] text-3xl mr-4"></i>
+                            <h4 class="text-xl font-bold text-[#4d4341]">Certificaciones Reconocidas</h4>
+                        </div>
+                        <p class="text-gray-600">Programas certificados avalados por instituciones reconocidas</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-users text-[#4d4341] text-3xl mr-4"></i>
+                            <h4 class="text-xl font-bold text-[#4d4341]">Instructores Expertos</h4>
+                        </div>
+                        <p class="text-gray-600">Profesionales con  experiencia en la industria alimentaria</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-flask text-[#4d4341] text-3xl mr-4"></i>
+                            <h4 class="text-xl font-bold text-[#4d4341]">Práctica Aplicada</h4>
+                        </div>
+                        <p class="text-gray-600">Para la valoración de productos alimentarios</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Estadísticas -->
+    <section class="py-16 bg-[#4d4341] text-white">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div>
+                    <div class="text-5xl font-bold mb-2">700+</div>
+                    <div class="text-gray-300">Estudiantes Capacitados</div>
+                </div>
+                <div>
+                    <div class="text-5xl font-bold mb-2">8+</div>
+                    <div class="text-gray-300">Servicios Especializados</div>
+                </div>
+                <div>
+                    <div class="text-5xl font-bold mb-2">5+</div>
+                    <div class="text-gray-300">Años de Experiencia</div>
+                </div>
+                <div>
+                    <div class="text-5xl font-bold mb-2">98%</div>
+                    <div class="text-gray-300">Satisfacción</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Servicios -->
+    <section id="servicios" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-[#4d4341] mb-4">Nuestros Servicios</h2>
+                <div class="w-24 h-1 bg-[#4d4341] mx-auto mb-8"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Soluciones integrales para el sector alimentario
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white rounded-xl shadow-2xl overflow-hidden hover:shadow-3xl transition duration-300 flex flex-col">
+                    <img src="{{ asset('images/CursoDisponible.jpg') }}" alt="Capacitaciones Alimentarias" class="w-full h-64 object-cover" style="object-position: 50% 30%;">
+                    <div class="p-6 flex-grow">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-chalkboard-teacher text-[#4d4341] text-3xl mr-3"></i>
+                            <h3 class="text-xl font-bold text-[#4d4341]">Capacitaciones Alimentarias</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">Cursos permanentes y actualizados diseñados para cumplir con la normativa ecuatoriana.</p>
+                        <ul class="text-sm text-gray-500 space-y-1">
+                            <li>✓ BPM y manipulación higiénica</li>
+                            <li>✓ Inocuidad alimentaria</li>
+                            <li>✓ Certificación válida</li>
+                            <li>✓ Convocatorias mensuales</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-2xl overflow-hidden hover:shadow-3xl transition duration-300 flex flex-col">
+                    <img src="{{ asset('images/Servicio2.png') }}" alt="Formulación de Yogurt" class="w-full h-64 object-cover" style="object-position: 50% 20%;">
+                    <div class="p-6 flex-grow">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-ice-cream text-[#4d4341] text-3xl mr-3"></i>
+                            <h3 class="text-xl font-bold text-[#4d4341]">Yogurt Natural y Griego</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">Fórmulas exactas para yogurt con textura cremosa, sabor equilibrado y 100% natural.</p>
+                        <ul class="text-sm text-gray-500 space-y-1">
+                            <li>✓ Textura cremosa perfecta</li>
+                            <li>✓ 100% ingredientes naturales</li>
+                            <li>✓ Para tu marca propia</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-2xl overflow-hidden hover:shadow-3xl transition duration-300 flex flex-col">
+                    <img src="{{ asset('images/Servicio1.png') }}" alt="Formulación de Gomitas" class="w-full h-64 object-cover object-top">
+                    <div class="p-6 flex-grow">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-candy-cane text-[#4d4341] text-3xl mr-3"></i>
+                            <h3 class="text-xl font-bold text-[#4d4341]">Formulación de Gomitas</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">Formulaciones exactas para elaborar gomitas con sabores variados, textura perfecta y gusto ideal.</p>
+                        <ul class="text-sm text-gray-500 space-y-1">
+                            <li>✓ Recetas por Ingeniero en Alimentos</li>
+                            <li>✓ Procesos optimizados</li>
+                            <li>✓ Ideal para emprendimientos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-2xl overflow-hidden hover:shadow-3xl transition duration-300 flex flex-col">
+                    <img src="{{ asset('images/AsesoriaImagen.jpeg') }}" alt="Asesoría Técnica y Auditorías" class="w-full h-64 object-cover object-top">
+                    <div class="p-6 flex-grow">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-clipboard-check text-[#4d4341] text-3xl mr-3"></i>
+                            <h3 class="text-xl font-bold text-[#4d4341]">Asesoría Técnica y Auditorías</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">Verificación de cumplimiento de BPM, HACCP y normativas del Codex Alimentarius.</p>
+                        <ul class="text-sm text-gray-500 space-y-1">
+                            <li>✓ Auditorías internas</li>
+                            <li>✓ Identificación de no conformidades</li>
+                            <li>✓ Planes de acción y mejoras</li>
+                            <li>✓ Acompañamiento técnico</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sabías Que - Blog -->
+    <section id="blog" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-[#4d4341] mb-4">Sabías Que...</h2>
+                <div class="w-24 h-1 bg-[#4d4341] mx-auto mb-8"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Datos curiosos e interesantes sobre el mundo de los alimentos
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="bg-gray-50 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 transform hover:scale-105">
+                    <img src="{{ asset('images/SabiasQue1.png') }}" alt="Sabías Que 1" class="w-full h-64 object-cover">
+                    <div class="p-4 bg-[#4d4341] text-white text-center">
+                        <p class="font-semibold">Dato Curioso #1</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 transform hover:scale-105">
+                    <img src="{{ asset('images/SabiasQue2.png') }}" alt="Sabías Que 2" class="w-full h-64 object-cover">
+                    <div class="p-4 bg-[#4d4341] text-white text-center">
+                        <p class="font-semibold">Dato Curioso #2</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 transform hover:scale-105">
+                    <img src="{{ asset('images/SabiasQue3.png') }}" alt="Sabías Que 3" class="w-full h-64 object-cover">
+                    <div class="p-4 bg-[#4d4341] text-white text-center">
+                        <p class="font-semibold">Dato Curioso #3</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 transform hover:scale-105">
+                    <img src="{{ asset('images/SabiasQue4.png') }}" alt="Sabías Que 4" class="w-full h-64 object-cover">
+                    <div class="p-4 bg-[#4d4341] text-white text-center">
+                        <p class="font-semibold">Dato Curioso #4</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 transform hover:scale-105">
+                    <img src="{{ asset('images/SabiasQue5.png') }}" alt="Sabías Que 5" class="w-full h-64 object-cover">
+                    <div class="p-4 bg-[#4d4341] text-white text-center">
+                        <p class="font-semibold">Dato Curioso #5</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 transform hover:scale-105">
+                    <img src="{{ asset('images/SabiasQue6.png') }}" alt="Sabías Que 6" class="w-full h-64 object-cover">
+                    <div class="p-4 bg-[#4d4341] text-white text-center">
+                        <p class="font-semibold">Dato Curioso #6</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- SECCIÓN DE BÚSQUEDA (FLUJO NORMAL) -->
@@ -302,8 +414,7 @@
             </form>
             @error('cedula')
                 <div class="text-center mt-4">
-                    <p
-                        class="text-red-500 text-sm font-bold flex items-center justify-center gap-1 bg-white/90 backdrop-blur inline-flex px-4 py-2 rounded-xl shadow-sm border border-red-100">
+                    <p class="text-red-500 text-sm font-bold flex items-center justify-center gap-1 bg-white/90 backdrop-blur inline-flex px-4 py-2 rounded-xl shadow-sm border border-red-100">
                         <span class="iconify" data-icon="line-md:alert-circle"></span> {{ $message }}
                     </p>
                 </div>
@@ -327,8 +438,7 @@
                 @else
                     {{-- Profile Card --}}
                     <div class="text-center mb-10">
-                        <div
-                            class="inline-flex flex-col items-center p-6 bg-white rounded-3xl shadow-sm border border-gray-100 w-full">
+                        <div class="inline-flex flex-col items-center p-6 bg-white rounded-3xl shadow-sm border border-gray-100 w-full">
                             <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                                 <span class="iconify text-3xl text-primary" data-icon="line-md:account"></span>
                             </div>
@@ -345,10 +455,7 @@
 
                     {{-- Course Timeline --}}
                     <div class="relative max-w-lg mx-auto">
-                        {{-- Connecting Line --}}
-                        <div
-                            class="absolute left-6 top-6 bottom-6 w-0.5 bg-gradient-to-b from-primary/30 via-primary/5 to-transparent hidden sm:block">
-                        </div>
+                        <div class="absolute left-6 top-6 bottom-6 w-0.5 bg-gradient-to-b from-primary/30 via-primary/5 to-transparent hidden sm:block"></div>
 
                         @foreach ($records as $record)
                             @php
@@ -369,36 +476,26 @@
                                 ];
                             @endphp
                             <div class="relative flex sm:gap-6 items-start mb-8 last:mb-0 group cursor-default">
-                                {{-- Timeline Node --}}
-                                <div
-                                    class="relative z-10 w-14 h-14 rounded-2xl hidden sm:flex items-center justify-center shrink-0 border-4 border-[#faf8f7] transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-md {{ $styles['bg'] }} text-white">
+                                <div class="relative z-10 w-14 h-14 rounded-2xl hidden sm:flex items-center justify-center shrink-0 border-4 border-[#faf8f7] transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-md {{ $styles['bg'] }} text-white">
                                     <span class="iconify text-2xl" data-icon="{{ $styles['icon'] }}"></span>
                                 </div>
 
-                                {{-- Card Info --}}
-                                <div
-                                    class="flex-1 bg-white rounded-3xl border {{ $styles['border'] }} shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] transition-all duration-500 flex flex-col overflow-hidden transform group-hover:-translate-y-2 group-hover:border-primary/20">
+                                <div class="flex-1 bg-white rounded-3xl border {{ $styles['border'] }} shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] transition-all duration-500 flex flex-col overflow-hidden transform group-hover:-translate-y-2 group-hover:border-primary/20">
                                     <div class="p-8 flex-1 relative overflow-hidden">
-                                        {{-- Decoración sutil de fondo en la tarjeta web --}}
                                         <div class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-gradient-to-br from-gray-50 to-gray-100 opacity-50 transform group-hover:scale-150 transition-transform duration-700"></div>
-                                        
                                         <div class="relative z-10">
-                                            <span
-                                                class="text-xs font-extrabold text-primary/60 uppercase tracking-widest flex items-center gap-1.5 mb-2 align-middle transform transition-transform duration-500 group-hover:translate-x-1">
+                                            <span class="text-xs font-extrabold text-primary/60 uppercase tracking-widest flex items-center gap-1.5 mb-2 align-middle transform transition-transform duration-500 group-hover:translate-x-1">
                                                 <span class="iconify text-sm" data-icon="line-md:document-list"></span> Certificación de Curso
                                             </span>
-                                            <h4
-                                                class="font-black text-gray-900 text-xl md:text-2xl leading-tight group-hover:text-primary transition-colors duration-300">
+                                            <h4 class="font-black text-gray-900 text-xl md:text-2xl leading-tight group-hover:text-primary transition-colors duration-300">
                                                 {{ $record->course_name }}
                                             </h4>
                                         </div>
                                     </div>
-
                                     <div class="px-8 py-5 border-t border-gray-100/50 bg-gradient-to-b from-gray-50/50 to-gray-50 flex flex-col gap-3 group-hover:bg-gray-50 transition-colors duration-500">
                                         <div class="flex justify-between items-center text-sm">
                                             <span class="font-bold text-gray-500">Fecha de finalización:</span>
-                                            <span
-                                                class="font-black text-gray-800 bg-white px-3 py-1 rounded-lg border border-gray-100 shadow-sm">{{ \Carbon\Carbon::parse($record->finished_at)->format('d/m/Y') }}</span>
+                                            <span class="font-black text-gray-800 bg-white px-3 py-1 rounded-lg border border-gray-100 shadow-sm">{{ \Carbon\Carbon::parse($record->finished_at)->format('d/m/Y') }}</span>
                                         </div>
                                         <div class="flex justify-between items-center text-sm">
                                             <span class="font-bold text-gray-500">Curso válido hasta:</span>
@@ -406,8 +503,7 @@
                                         </div>
                                         @if($isExpired)
                                             <div class="mt-4 text-center">
-                                                <p
-                                                    class="text-xs font-bold text-orange-600 uppercase tracking-widest flex items-center justify-center gap-1.5 bg-orange-50 py-2.5 rounded-xl border border-orange-100/50 animate-pulse">
+                                                <p class="text-xs font-bold text-orange-600 uppercase tracking-widest flex items-center justify-center gap-1.5 bg-orange-50 py-2.5 rounded-xl border border-orange-100/50 animate-pulse">
                                                     <span class="iconify text-sm" data-icon="line-md:alert"></span> Debes Retomar la Certificación
                                                 </p>
                                             </div>
@@ -428,9 +524,125 @@
         </section>
     @else
         <div class="pt-32 pb-16 bg-[#faf8f7] min-h-[30vh]">
-            <!-- Espacio vacío en caso de no haber búsqueda, para que el Hero no colisione con el fin de la página -->
+            <!-- Espacio vacío en caso de no haber búsqueda -->
         </div>
     @endif
+
+    <!-- Contacto -->
+    <section id="contacto" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-[#4d4341] mb-4">¡Contáctanos!</h2>
+                <div class="w-24 h-1 bg-[#4d4341] mx-auto mb-8"></div>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    ¿Tienes preguntas? Estamos aquí para ayudarte
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto items-start">
+                <div>
+                    <h3 class="text-2xl font-bold text-[#4d4341] mb-6">Información de Contacto</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-[#4d4341] text-2xl mr-4 mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-[#4d4341]">Dirección</h4>
+                                <p class="text-[#4d4341]">Ambato - Ecuador</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <i class="fas fa-phone text-[#4d4341] text-2xl mr-4 mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-[#4d4341]">Teléfono</h4>
+                                <p class="text-[#4d4341]">+593 99 842 6977</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <i class="fas fa-envelope text-[#4d4341] text-2xl mr-4 mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-[#4d4341]">Email</h4>
+                                <p class="text-[#4d4341]">innovafoodgc21@gmail.com</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <i class="fas fa-clock text-[#4d4341] text-2xl mr-4 mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-[#4d4341]">Horario</h4>
+                                <p class="text-[#4d4341]">Lunes a Viernes: 8:00 AM - 6:00 PM</p>
+                                <p class="text-[#4d4341]">Sábados: 9:00 AM - 1:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Redes Sociales -->
+                    <div class="mt-8">
+                        <h4 class="font-bold text-[#4d4341] mb-4 text-xl">Síguenos en Redes Sociales</h4>
+                        <div class="flex space-x-4">
+                            <a href="https://www.facebook.com/share/1BaWG35Kfz/" target="_blank" class="w-12 h-12 bg-[#4d4341] text-white rounded-full flex items-center justify-center hover:bg-[#3a3230] transition duration-300">
+                                <i class="fab fa-facebook-f text-xl"></i>
+                            </a>
+                            <a href="https://www.instagram.com/innovafoodg.c?igsh=MWFycm40MDl2NTRobA==" target="_blank" class="w-12 h-12 bg-[#4d4341] text-white rounded-full flex items-center justify-center hover:bg-[#3a3230] transition duration-300">
+                                <i class="fab fa-instagram text-xl"></i>
+                            </a>
+                            <a href="https://wa.me/593998426977" target="_blank" class="w-12 h-12 bg-[#4d4341] text-white rounded-full flex items-center justify-center hover:bg-[#3a3230] transition duration-300">
+                                <i class="fab fa-whatsapp text-xl"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-[#4d4341] mb-6">Envíanos un Mensaje</h3>
+                        
+                        <div class="mb-3">
+                            <label class="block text-[#4d4341] font-semibold mb-2">Nombre Completo</label>
+                            <input type="text" id="nombre" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#4d4341] transition-all" required>
+                            <p id="error-nombre" class="text-red-600 text-sm mt-1 hidden"></p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="block text-[#4d4341] font-semibold mb-2">Email</label>
+                            <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#4d4341] transition-all" required>
+                            <p id="error-email" class="text-red-600 text-sm mt-1 hidden"></p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="block text-[#4d4341] font-semibold mb-2">Teléfono</label>
+                            <input type="tel" id="telefono" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#4d4341] transition-all" required>
+                            <p id="error-telefono" class="text-red-600 text-sm mt-1 hidden"></p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="block text-[#4d4341] font-semibold mb-2">Asunto</label>
+                            <select id="asunto" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#4d4341] transition-all" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="Información de cursos">Información de cursos</option>
+                                <option value="Inscripción">Inscripción</option>
+                                <option value="Consultoría">Consultoría</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                            <p id="error-asunto" class="text-red-600 text-sm mt-1 hidden"></p>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-[#4d4341] font-semibold mb-2">Mensaje <span class="text-gray-400 text-sm">(Opcional)</span></label>
+                            <textarea rows="3" id="mensaje" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#4d4341] transition-all" placeholder="Escribe tu mensaje aquí..."></textarea>
+                            <p id="error-mensaje" class="text-red-600 text-sm mt-1 hidden"></p>
+                        </div>
+
+                        <button onclick="enviarWhatsApp()" type="button" class="w-full bg-[#4d4341] hover:bg-[#3a3230] text-white px-6 py-3 rounded-lg font-semibold transition duration-300">
+                            <i class="fab fa-whatsapp mr-2"></i>Enviar por WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <script>
         // JS INTEGRADO PARA GARANTIZAR QUE EL CARRUSEL FUNCIONE
@@ -476,6 +688,23 @@
             startCarousel();
         }
 
+        function enviarWhatsApp() {
+            const numero = "593998426977";
+            const nombre = document.getElementById("nombre").value;
+            const email = document.getElementById("email").value;
+            const telefono = document.getElementById("telefono").value;
+            const asunto = document.getElementById("asunto").value;
+            const mensaje = document.getElementById("mensaje").value;
+
+            if(!nombre || !email || !telefono || !asunto) {
+                alert("Por favor completa los campos requeridos.");
+                return;
+            }
+
+            const textoMsg = `Hola Innova Food G.C., mi nombre es ${nombre}.%0A%0A*Email:* ${email}%0A*Tel:* ${telefono}%0A*Asunto:* ${asunto}%0A*Mensaje:* ${mensaje}`;
+            window.open(`https://wa.me/${numero}?text=${textoMsg}`, "_blank");
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             startCarousel();
 
@@ -495,6 +724,8 @@
                 carouselContainer.addEventListener('mouseenter', () => clearInterval(carouselInterval));
                 carouselContainer.addEventListener('mouseleave', () => startCarousel());
             }
+
+            // Mobile menu integration (if any is needed) can also go here
         });
     </script>
 
@@ -507,8 +738,6 @@
                     <p class="text-gray-300 mb-4">Instituto de capacitaciones profesionales especializado en el sector alimentario.</p>
                     <img src="{{ asset('InnovaFood_Logo.png') }}" alt="Logo" class="w-20 h-20 object-contain bg-white rounded-lg p-2">
                 </div>
-
-               
 
                 <div>
                     <h4 class="text-lg font-bold mb-4">Servicios</h4>
