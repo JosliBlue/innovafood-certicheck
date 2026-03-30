@@ -83,7 +83,7 @@
 
                 <div class="flex items-center space-x-3 md:space-x-6 shrink-0 ml-2">
                     @auth
-                        <a href="#buscador" class="text-sm md:text-lg font-bold text-gray-500 hidden sm:block hover:text-primary transition duration-300">Registro institucional</a>
+                        <a href="#buscador" class="text-sm md:text-lg font-bold text-gray-500 hidden sm:block hover:text-primary transition duration-300">Consulta tu curso</a>
                         <a href="{{ route('clients.index') }}"
                             class="text-white bg-primary hover:bg-primary-hover px-3 py-1.5 md:px-4 md:py-2 text-xs sm:text-sm md:text-base rounded-xl md:rounded-lg font-bold transition duration-300">
                             <span class="hidden sm:inline">Administrador</span>
@@ -111,11 +111,16 @@
                         <div class="text-center text-white px-4 max-w-5xl mb-8">
                             <h1
                                 class="text-5xl md:text-7xl font-black mb-6 animate-fade-in drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
-                                Registro Institucional
+                                Consulta tu Registro
                             </h1>
-                            <p class="text-xl md:text-3xl font-bold mb-4 animate-fade-in-delay text-white/90">
-                                Valida las credenciales y certificaciones
+                            <p class="text-xl md:text-3xl font-bold mb-8 animate-fade-in-delay text-white/90">
+                                ¿Tienes algún certificado? consúltalo aquí
                             </p>
+                            <a href="#buscador"
+                                class="inline-flex items-center gap-3 bg-white text-primary hover:bg-gray-100 font-extrabold px-8 md:px-12 py-4 md:py-6 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 animate-fade-in-delay-2 text-lg md:text-2xl mt-4">
+                                <span class="iconify text-2xl md:text-3xl" data-icon="line-md:search"></span>
+                                Consultar aquí
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -394,7 +399,7 @@
         <div class="w-full max-w-3xl px-6">
             <!-- Título del buscador según requerimiento del usuario -->
             <h3 class="text-center text-primary font-black text-2xl md:text-4xl mb-10 drop-shadow-sm">
-                Registro nacional e internacional
+                Registro institucional, nacional e internacional
             </h3>
 
             <form method="POST" action="{{ route('lookup.search') }}#resultados"
@@ -487,9 +492,18 @@
                                             <span class="text-xs font-extrabold text-primary/60 uppercase tracking-widest flex items-center gap-1.5 mb-2 align-middle transform transition-transform duration-500 group-hover:translate-x-1">
                                                 <span class="iconify text-sm" data-icon="line-md:document-list"></span> Certificación de Curso
                                             </span>
-                                            <h4 class="font-black text-gray-900 text-xl md:text-2xl leading-tight group-hover:text-primary transition-colors duration-300">
+                                            <h4 class="text-center font-black text-gray-900 text-xl md:text-2xl leading-tight group-hover:text-primary transition-colors duration-300 mb-1">
                                                 {{ $record->course_name }}
                                             </h4>
+                                            <h5 class="text-sm md:text-base font-bold text-gray-500 mb-3 flex items-center gap-1.5">
+                                                Horas cursadas: {{ $record->academic_hours ?? 10 }} horas académicas
+                                            </h5>
+                                            <div class="flex flex-wrap gap-2">
+                                                <span class="inline-flex items-center gap-1.5 text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full border border-green-200">
+                                                    <span class="iconify" data-icon="line-md:check-all"></span>
+                                                    Estado de curso: Aprobado
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="px-8 py-5 border-t border-gray-100/50 bg-gradient-to-b from-gray-50/50 to-gray-50 flex flex-col gap-3 group-hover:bg-gray-50 transition-colors duration-500">
@@ -518,6 +532,13 @@
                                 </div>
                             </div>
                         @endforeach
+                    </div>
+
+                    {{-- Flags Section --}}
+                    <div class="mt-12 text-center flex flex-col items-center relative z-10 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                        <div class="flex flex-wrap justify-center gap-3 opacity-80 hover:opacity-100 transition-opacity duration-300">
+                            🇪🇨 🇨🇴 🇵🇪 🇨🇱 🇦🇷 🇲🇽 🇪🇸 🇺🇸 🇵🇦 🇨🇷 🇺🇾 🇵🇾 🇧🇴 🇻🇪 🇩🇴 🇭🇳 🇸🇻 🇬🇹 🇳🇮 🇨🇺 🇧🇷
+                        </div>
                     </div>
                 @endif
             </div>

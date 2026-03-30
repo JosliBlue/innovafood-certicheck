@@ -17,6 +17,7 @@ return new class extends Migration
 
             // Datos del curso
             $table->string('course_name');
+            $table->integer('academic_hours')->default(10);
 
             // Fechas
             $table->date('finished_at');

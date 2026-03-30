@@ -45,6 +45,22 @@
     @enderror
 </div>
 
+{{-- Horas académicas cursadas --}}
+<div class="flex flex-col gap-1 mt-2">
+    <label for="academic_hours" class="text-xs font-bold text-primary uppercase tracking-wide">Horas académicas cursadas</label>
+    <select id="academic_hours" name="academic_hours"
+        class="border {{ $errors->has('academic_hours') ? 'border-red-400' : 'border-gray-200' }} rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
+        @for ($i = 10; $i <= 100; $i += 10)
+            <option value="{{ $i }}" {{ old('academic_hours', $client->academic_hours ?? 10) == $i ? 'selected' : '' }}>
+                {{ $i }}
+            </option>
+        @endfor
+    </select>
+    @error('academic_hours')
+        <p class="text-red-500 text-xs">{{ $message }}</p>
+    @enderror
+</div>
+
 {{-- Fecha de finalización --}}
 <div class="flex flex-col gap-1">
     <label for="finished_at" class="text-xs font-bold text-primary uppercase tracking-wide">Fecha de finalización del curso</label>

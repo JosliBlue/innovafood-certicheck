@@ -20,6 +20,7 @@ class UpdateClientRequest extends FormRequest
             'first_names' => ['required', 'string', 'max:150'],
             'course_name' => ['required', 'string', 'max:150'],
             'finished_at' => ['required', 'date'],
+            'academic_hours' => ['required', 'integer', 'min:10', 'max:100'],
         ];
     }
 
@@ -33,6 +34,8 @@ class UpdateClientRequest extends FormRequest
             'course_name.required' => 'El nombre del curso es obligatorio.',
             'finished_at.required' => 'La fecha de finalización es obligatoria.',
             'finished_at.date' => 'La fecha de finalización no es válida.',
+            'academic_hours.required' => 'Las horas académicas son obligatorias.',
+            'academic_hours.integer' => 'Las horas académicas deben ser un número.',
         ];
     }
 }

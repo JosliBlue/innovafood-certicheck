@@ -13,6 +13,7 @@ class Client extends Model
         'first_names',
         'course_name',
         'finished_at',
+        'academic_hours',
     ];
 
     protected function casts(): array
@@ -20,6 +21,7 @@ class Client extends Model
         return [
             'id_card' => 'string',
             'finished_at' => 'date',
+            'academic_hours' => 'integer',
         ];
     }
 
