@@ -533,13 +533,6 @@
                             </div>
                         @endforeach
                     </div>
-
-                    {{-- Flags Section --}}
-                    <div class="mt-12 text-center flex flex-col items-center relative z-10 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-                        <div class="flex flex-wrap justify-center gap-3 opacity-80 hover:opacity-100 transition-opacity duration-300">
-                            🇪🇨 🇨🇴 🇵🇪 🇨🇱 🇦🇷 🇲🇽 🇪🇸 🇺🇸 🇵🇦 🇨🇷 🇺🇾 🇵🇾 🇧🇴 🇻🇪 🇩🇴 🇭🇳 🇸🇻 🇬🇹 🇳🇮 🇨🇺 🇧🇷
-                        </div>
-                    </div>
                 @endif
             </div>
         </section>
@@ -548,6 +541,13 @@
             <!-- Espacio vacío en caso de no haber búsqueda -->
         </div>
     @endif
+
+    {{-- Flags Section --}}
+    <div class="mt-12 text-center flex flex-col items-center relative z-10 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+        <div class="flex flex-wrap justify-center gap-3 opacity-80 hover:opacity-100 transition-opacity duration-300">
+            🇪🇨 🇨🇴 🇵🇪 🇨🇱 🇦🇷 🇲🇽 🇪🇸 🇺🇸 🇵🇦 🇨🇷 🇺🇾 🇵🇾 🇧🇴 🇻🇪 🇩🇴 🇭🇳 🇸🇻 🇬🇹 🇳🇮 🇨🇺 🇧🇷
+        </div>
+    </div>
 
     <!-- Contacto -->
     <section id="contacto" class="py-20 bg-white">
