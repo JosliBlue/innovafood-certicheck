@@ -533,13 +533,6 @@
                             </div>
                         @endforeach
                     </div>
-
-                    {{-- Flags Section --}}
-                    <div class="mt-12 text-center flex flex-col items-center relative z-10 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-                        <div class="flex flex-wrap justify-center gap-3 opacity-80 hover:opacity-100 transition-opacity duration-300">
-                            🇪🇨 🇨🇴 🇵🇪 🇨🇱 🇦🇷 🇲🇽 🇪🇸 🇺🇸 🇵🇦 🇨🇷 🇺🇾 🇵🇾 🇧🇴 🇻🇪 🇩🇴 🇭🇳 🇸🇻 🇬🇹 🇳🇮 🇨🇺 🇧🇷
-                        </div>
-                    </div>
                 @endif
             </div>
         </section>
@@ -548,6 +541,33 @@
             <!-- Espacio vacío en caso de no haber búsqueda -->
         </div>
     @endif
+
+    {{-- Flags Section --}}
+    <div class="mt-12 text-center flex flex-col items-center relative z-10 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+        <div class="flex flex-wrap justify-center gap-3 opacity-80 hover:opacity-100 transition-opacity duration-300">
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:ec" title="Ecuador"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:co" title="Colombia"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:pe" title="Perú"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:cl" title="Chile"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:ar" title="Argentina"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:mx" title="México"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:es" title="España"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:us" title="Estados Unidos"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:pa" title="Panamá"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:cr" title="Costa Rica"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:uy" title="Uruguay"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:py" title="Paraguay"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:bo" title="Bolivia"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:ve" title="Venezuela"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:do" title="República Dominicana"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:hn" title="Honduras"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:sv" title="El Salvador"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:gt" title="Guatemala"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:ni" title="Nicaragua"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:cu" title="Cuba"></span>
+            <span class="iconify text-2xl md:text-3xl drop-shadow-sm hover:-translate-y-1 transition-transform cursor-help" data-icon="circle-flags:br" title="Brasil"></span>
+        </div>
+    </div>
 
     <!-- Contacto -->
     <section id="contacto" class="py-20 bg-white">
