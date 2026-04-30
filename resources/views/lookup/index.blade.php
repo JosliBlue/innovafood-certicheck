@@ -155,7 +155,7 @@
                                 class="text-5xl md:text-7xl font-black mb-6 animate-fade-in drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
                                 Capacitación Profesional</h2>
                             <p class="text-xl md:text-3xl font-bold animate-fade-in-delay text-white/90">
-                                Profesionales formados con los más altos estándares
+                                Certificado con respaldo institucional certificado por el ministerio de trabajo del ecuador
                             </p>
                         </div>
                     </div>
@@ -192,7 +192,7 @@
                 <div>
                     <h3 class="text-3xl font-bold text-[#4d4341] mb-6">Nuestra Experiencia</h3>
                     <p class="text-gray-700 mb-6 leading-relaxed">
-                        En <strong class="text-[#4d4341]">Innova Food G.C.</strong> contamos con <strong class="text-[#4d4341]">5 años de experiencia</strong> en el sector alimentario, ofreciendo servicios especializados en capacitación, asesoría y cumplimiento de normativas sanitarias.
+                        En <strong class="text-[#4d4341]">Innova Food G.C.</strong> contamos con <strong class="text-[#4d4341]">5 años de experiencia</strong> en el sector alimentario, ofreciendo servicios especializados en capacitación, asesoría y cumplimiento de normativas sanitarias. Certificación con respaldo institucional, impartida por instructor calificado por el Ministerio de Trabajo 🇪🇨, con formación profesional registrada en SENESCYT.
                     </p>
                     <p class="text-gray-700 mb-6 leading-relaxed">
                         Desde el <strong class="text-[#4d4341]">2020</strong> hemos acompañado a diversas empresas y profesionales del país en la mejora de sus procesos, garantizando la inocuidad y calidad de los alimentos que producen.
@@ -424,6 +424,39 @@
                     </p>
                 </div>
             @enderror
+        </div>
+    </section>
+
+    <!-- Validación Profesional -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4 md:px-8 lg:px-16 xl:px-24">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#4d4341] mb-4">Validación Profesional del Instructor MDT</h2>
+                <div class="w-24 h-1 bg-[#4d4341] mx-auto"></div>
+            </div>
+
+            <div class="flex justify-center mb-12">
+                <img src="{{ asset('images/ministerio/qr_certificado.jpeg') }}" alt="QR Certificado" class="w-48 h-48 object-contain rounded-lg">
+            </div>
+
+            <div class="flex flex-wrap md:flex-nowrap gap-4 items-stretch">
+                <!-- Parte 1: 1/5 -->
+                <div class="w-full md:w-1/5 flex">
+                    <img src="{{ asset('images/ministerio/logo_mensaje_parte1.jpeg') }}" alt="Banner Parte 1" class="w-full h-full object-contain rounded-lg">
+                </div>
+                <!-- Parte 2: 2/5 -->
+                <div class="w-full md:w-3/5 flex items-center text-gray-600 text-left p-4 rounded-lg border-l-4 border-yellow-400">
+                    <p>Certificado con <span class="text-yellow-600 font-bold uppercase">respaldo institucional</span>, impartida por <span class="uppercase font-bold">instructor calificado</span> por el <span class="uppercase font-bold">ministerio de trabajo del ecuador</span>, con formación profesional registrada en <span class="text-yellow-600 font-bold uppercase">SENESCYT</span></p>
+                </div>
+                <!-- Parte 3: 1/5 -->
+                <div class="w-full md:w-1/5 flex border-l-4 border-yellow-400">
+                    <img src="{{ asset('images/ministerio/logo_mensaje_parte3.jpeg') }}" alt="Banner Parte 3" class="w-full h-full object-contain rounded-lg">
+                </div>
+                <!-- Parte 4: 1/5 -->
+                <div class="w-full md:w-1/5 flex border-l-4 border-yellow-400">
+                    <img src="{{ asset('images/ministerio/logo_mensaje_parte4.jpeg') }}" alt="Banner Parte 4" class="w-full h-full object-contain rounded-lg">
+                </div>
+            </div>
         </div>
     </section>
 
