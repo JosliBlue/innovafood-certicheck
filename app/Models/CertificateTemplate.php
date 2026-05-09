@@ -63,7 +63,9 @@ class CertificateTemplate extends Model
     /**
      * Definición por defecto por field_key (coordenadas en espacio de diseño).
      *
-     * @return array<string, array{field_key: string, x: float, y: float, width: float, font_size: float, font_color: string, font_weight: string}>
+     * font_family: clave en config/certificate_fonts.php → families.
+     *
+     * @return array<string, array{field_key: string, x: float, y: float, width: float, font_size: float, font_color: string, font_weight: string, font_family: string}>
      */
     public static function defaultFieldsKeyed(): array
     {
@@ -76,6 +78,7 @@ class CertificateTemplate extends Model
                 'font_size' => 130,
                 'font_color' => '#1a1a1a',
                 'font_weight' => 'bold',
+                'font_family' => 'dejavu_sans',
             ],
             'last_names' => [
                 'field_key' => 'last_names',
@@ -85,6 +88,7 @@ class CertificateTemplate extends Model
                 'font_size' => 130,
                 'font_color' => '#1a1a1a',
                 'font_weight' => 'bold',
+                'font_family' => 'dejavu_sans',
             ],
             'id_card' => [
                 'field_key' => 'id_card',
@@ -94,6 +98,7 @@ class CertificateTemplate extends Model
                 'font_size' => 85,
                 'font_color' => '#333333',
                 'font_weight' => 'normal',
+                'font_family' => 'dejavu_sans',
             ],
             'course_name' => [
                 'field_key' => 'course_name',
@@ -103,6 +108,7 @@ class CertificateTemplate extends Model
                 'font_size' => 95,
                 'font_color' => '#1a1a1a',
                 'font_weight' => 'normal',
+                'font_family' => 'dejavu_sans',
             ],
             'academic_hours' => [
                 'field_key' => 'academic_hours',
@@ -112,6 +118,7 @@ class CertificateTemplate extends Model
                 'font_size' => 75,
                 'font_color' => '#333333',
                 'font_weight' => 'normal',
+                'font_family' => 'dejavu_sans',
             ],
             'finished_at' => [
                 'field_key' => 'finished_at',
@@ -121,6 +128,7 @@ class CertificateTemplate extends Model
                 'font_size' => 75,
                 'font_color' => '#333333',
                 'font_weight' => 'normal',
+                'font_family' => 'dejavu_sans',
             ],
         ];
     }

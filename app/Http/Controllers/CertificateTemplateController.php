@@ -47,10 +47,14 @@ class CertificateTemplateController extends Controller
 
         $bgUrl = $certificate_template->backgroundDataUri() ?? '';
 
+        /** @var array<string, array{label: string, css_family: string, faces: array<int, array<string, mixed>>}> $certificateFontFamilies */
+        $certificateFontFamilies = config('certificate_fonts.families', []);
+
         return view('certificate_templates.editor', [
             'template' => $certificate_template,
             'editorRows' => $editorRows,
             'bgUrl' => $bgUrl,
+            'certificateFontFamilies' => $certificateFontFamilies,
         ]);
     }
 

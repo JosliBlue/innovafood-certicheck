@@ -34,7 +34,7 @@
             <p class="max-w-6xl mx-auto mt-4 text-white/55 text-[11px] font-semibold leading-relaxed">
                 Misma grilla que los carnets Ligatactica: el lienzo mide <strong class="text-white/80">{{ $DW }}×{{ $DH }}</strong>
                 unidades de diseño; en PDF cada unidad equivale a <strong class="text-white/80">{{ \App\Models\CertificateTemplate::DESIGN_TO_MM }} mm</strong>.
-                Arrastra cada etiqueta sobre la imagen; a la derecha ajustas ancho, tipografía y color (texto siempre alineado a la izquierda en el PDF).
+                Arrastra cada etiqueta sobre la imagen; a la derecha ajustas ancho, fuente por campo, tamaño y color (texto siempre alineado a la izquierda en el PDF).
             </p>
         </header>
 
@@ -143,6 +143,16 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div>
+                                    <label class="text-[9px] font-bold text-gray-400 uppercase">Fuente</label>
+                                    <select name="fields[{{ $fk }}][font_family]"
+                                        class="js-cert-sync w-full px-2 py-2 rounded-xl border border-gray-100 text-xs font-bold"
+                                        data-axis="font_family">
+                                        @foreach ($certificateFontFamilies as $fontKey => $fam)
+                                            <option value="{{ $fontKey }}" @selected(old('fields.'.$fk.'.font_family', $row['font_family'] ?? 'dejavu_sans') === $fontKey)>{{ $fam['label'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                         </details>
                     @endforeach
@@ -157,8 +167,24 @@
         }
     </style>
 
+    <style>
+        @foreach ($certificateFontFamilies as $fam)
+            @foreach ($fam['faces'] ?? [] as $face)
+                @if (! empty($face['path']))
+                    @font-face {
+                        font-family: '{{ $fam['css_family'] }}';
+                        src: url('{{ asset($face['path']) }}') format('truetype');
+                        font-weight: {{ $face['weight'] ?? 'normal' }};
+                        font-style: {{ $face['style'] ?? 'normal' }};
+                    }
+                @endif
+            @endforeach
+        @endforeach
+    </style>
+
     <script>
         (function () {
+            const CERT_FONT_CSS = @json(collect($certificateFontFamilies)->map(fn ($f) => $f['css_family'])->all());
             const DESIGN_W = {{ (int) $DW }};
             const DESIGN_H = {{ (int) $DH }};
             const form = document.getElementById('certificate-editor-form');
@@ -182,6 +208,7 @@
                     font_size: num('font_size'),
                     font_color: (form.querySelector('[name="fields[' + key + '][font_color]"]') || {}).value || '#000000',
                     font_weight: (form.querySelector('[name="fields[' + key + '][font_weight]"]') || {}).value || 'normal',
+                    font_family: (form.querySelector('[name="fields[' + key + '][font_family]"]') || {}).value || 'dejavu_sans',
                 };
             }
 
@@ -204,6 +231,8 @@
                     const cqw = (f.font_size / DESIGN_W) * 100;
                     btn.style.fontSize = 'calc(' + cqw + ' * 1cqw)';
                     btn.style.fontWeight = f.font_weight;
+                    const cssFam = CERT_FONT_CSS[f.font_family];
+                    btn.style.fontFamily = cssFam ? ("'" + cssFam + "', DejaVu Sans, sans-serif") : 'DejaVu Sans, sans-serif';
                     btn.style.color = '#ffffff';
                     btn.style.textAlign = 'left';
                     btn.style.height = (h / DESIGN_H * 100) + '%';

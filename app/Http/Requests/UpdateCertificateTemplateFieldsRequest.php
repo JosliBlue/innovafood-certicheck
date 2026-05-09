@@ -22,6 +22,8 @@ class UpdateCertificateTemplateFieldsRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
         ];
 
+        $fontFamilyKeys = array_keys(config('certificate_fonts.families', []));
+
         foreach (CertificateTemplate::FIELD_KEYS as $key) {
             $rules["fields.{$key}.field_key"] = ['required', Rule::in(CertificateTemplate::FIELD_KEYS)];
             $rules["fields.{$key}.x"] = ['required', 'numeric', 'min:0', 'max:'.CertificateTemplate::DESIGN_WIDTH];
@@ -30,6 +32,7 @@ class UpdateCertificateTemplateFieldsRequest extends FormRequest
             $rules["fields.{$key}.font_size"] = ['required', 'numeric', 'min:8', 'max:400'];
             $rules["fields.{$key}.font_color"] = ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'];
             $rules["fields.{$key}.font_weight"] = ['required', Rule::in(['normal', 'bold'])];
+            $rules["fields.{$key}.font_family"] = ['required', 'string', Rule::in($fontFamilyKeys)];
         }
 
         return $rules;

@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>Certificado</title>
     <style>
+        {!! $font_face_css !!}
+
         @page {
             size: A4 landscape;
             margin: 0;
@@ -58,7 +60,7 @@
 
         @foreach ($pdf_fields as $field)
             <div class="field"
-                style="left: {{ $field['x_mm'] }}mm; top: {{ $field['y_mm'] }}mm; width: {{ $field['width_mm'] }}mm; font-size: {{ $field['font_size_mm'] }}mm; color: {{ $field['font_color'] }}; font-weight: {{ $field['font_weight'] }}; text-align: {{ $field['text_align'] }};">
+                style="left: {{ $field['x_mm'] }}mm; top: {{ $field['y_mm'] }}mm; width: {{ $field['width_mm'] }}mm; font-size: {{ $field['font_size_mm'] }}mm; color: {{ $field['font_color'] }}; font-weight: {{ $field['font_weight'] }}; font-family: '{{ $field['font_css_family'] }}', DejaVu Sans, sans-serif; text-align: {{ $field['text_align'] }};">
                 {{ $field['value'] }}
             </div>
         @endforeach

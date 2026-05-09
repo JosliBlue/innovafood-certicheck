@@ -10,6 +10,58 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CertificatePdfService
 {
+    /**
+     * Incrusta TTF como data URI para DomPDF (evita HTTP remoto con isRemoteEnabled).
+     *
+     * @param  array<int, string>  $fontFamilyKeys
+     */
+    private function buildFontFaceCss(array $fontFamilyKeys): string
+    {
+        /** @var array<string, array{label: string, css_family: string, faces: array<int, array{weight: string, style: string, path: string}>}> $families */
+        $families = config('certificate_fonts.families', []);
+
+        $blocks = [];
+        foreach (array_unique($fontFamilyKeys) as $fontKey) {
+            $def = $families[$fontKey] ?? null;
+            if ($def === null || ($def['faces'] ?? []) === []) {
+                continue;
+            }
+            $family = $def['css_family'];
+            foreach ($def['faces'] as $face) {
+                $path = $face['path'] ?? '';
+                if ($path === '') {
+                    continue;
+                }
+                $fullPath = public_path($path);
+                if (! is_readable($fullPath)) {
+                    continue;
+                }
+                $binary = @file_get_contents($fullPath);
+                if ($binary === false || $binary === '') {
+                    continue;
+                }
+                $dataUri = 'data:font/ttf;base64,'.base64_encode($binary);
+                $weight = $face['weight'] ?? 'normal';
+                $style = $face['style'] ?? 'normal';
+                $blocks[] = "@font-face{font-family:'{$family}';src:url('{$dataUri}') format('truetype');font-weight:{$weight};font-style:{$style};}";
+            }
+        }
+
+        return implode("\n", $blocks);
+    }
+
+    /**
+     * @return array{css_family: string}
+     */
+    private function resolveFontDefinition(string $fontFamilyKey): array
+    {
+        /** @var array<string, array{label?: string, css_family?: string, faces?: array<int, mixed>}> $families */
+        $families = config('certificate_fonts.families', []);
+        $def = $families[$fontFamilyKey] ?? $families['dejavu_sans'] ?? ['css_family' => 'DejaVu Sans'];
+
+        return ['css_family' => $def['css_family'] ?? 'DejaVu Sans'];
+    }
+
     private function designToMm(mixed $value): float
     {
         if ($value === null || ! is_numeric($value)) {
@@ -37,6 +89,9 @@ class CertificatePdfService
             default => '',
         };
 
+        $fontFamilyKey = is_string($field['font_family'] ?? null) ? $field['font_family'] : 'dejavu_sans';
+        $fontDef = $this->resolveFontDefinition($fontFamilyKey);
+
         return [
             'field_key' => $key,
             'value' => $value,
@@ -46,19 +101,9 @@ class CertificatePdfService
             'font_size_mm' => $this->designToMm($field['font_size'] ?? 12),
             'font_color' => $field['font_color'] ?? '#111111',
             'font_weight' => $field['font_weight'] ?? 'normal',
+            'font_css_family' => $fontDef['css_family'],
             'text_align' => 'left',
         ];
-    }
-
-    /**
-     * @return array<int, array<string, mixed>>
-     */
-    private function buildPdfFields(Client $client, CertificateTemplate $template): array
-    {
-        return collect($template->orderedFields())
-            ->map(fn (array $field) => $this->mapFieldForPdf($field, $client))
-            ->values()
-            ->all();
     }
 
     private function backgroundDataUri(CertificateTemplate $template): ?string
@@ -71,9 +116,19 @@ class CertificatePdfService
      */
     private function viewPayload(Client $client, CertificateTemplate $template): array
     {
+        $ordered = $template->orderedFields();
+        $fontKeys = [];
+        foreach ($ordered as $row) {
+            $fontKeys[] = is_string($row['font_family'] ?? null) ? $row['font_family'] : 'dejavu_sans';
+        }
+
         return [
             'background_data_uri' => $this->backgroundDataUri($template),
-            'pdf_fields' => $this->buildPdfFields($client, $template),
+            'pdf_fields' => collect($ordered)
+                ->map(fn (array $field) => $this->mapFieldForPdf($field, $client))
+                ->values()
+                ->all(),
+            'font_face_css' => $this->buildFontFaceCss($fontKeys),
         ];
     }
 
@@ -90,7 +145,7 @@ class CertificatePdfService
         $payload = $this->viewPayload($client, $template);
 
         $pdf = PdfFacade::setOptions([
-            'isRemoteEnabled' => true,
+            'isRemoteEnabled' => false,
             'isHtml5ParserEnabled' => true,
         ])->loadView('pdf.certificate', $payload)->setPaper('a4', 'landscape');
 
