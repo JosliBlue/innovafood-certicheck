@@ -4,29 +4,32 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreClientRequest;
 use App\Http\Requests\UpdateClientRequest;
+use App\Models\CertificateTemplate;
 use App\Models\Client;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\View\View;
 
 class ClientController extends Controller
 {
-    public function index(\Illuminate\Http\Request $request): View
+    public function index(Request $request): View
     {
         $query = Client::query();
 
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
-                $q->where('id_card', 'like', '%' . $search . '%')
-                  ->orWhere('first_names', 'like', '%' . $search . '%')
-                  ->orWhere('last_names', 'like', '%' . $search . '%');
+                $q->where('id_card', 'like', '%'.$search.'%')
+                    ->orWhere('first_names', 'like', '%'.$search.'%')
+                    ->orWhere('last_names', 'like', '%'.$search.'%');
             });
         }
 
         $clients = $query->orderBy('last_names')->get();
+        $certificateTemplates = CertificateTemplate::query()->orderBy('name')->get();
 
-        return view('clients.index', compact('clients'));
+        return view('clients.index', compact('clients', 'certificateTemplates'));
     }
 
     public function create(): View

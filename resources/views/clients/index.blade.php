@@ -87,10 +87,16 @@
                     </div>
                 </form>
 
-                <a href="{{ route('clients.create') }}"
-                    class="bg-primary hover:bg-primary-hover text-white py-2.5 px-6 rounded-2xl font-bold shadow-md shadow-primary/10 hover:shadow-lg hover:shadow-primary/20 transition-all flex items-center gap-2 w-full sm:w-auto justify-center">
-                    <span class="iconify text-lg" data-icon="line-md:plus"></span> Nuevo cliente
-                </a>
+                <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <a href="{{ route('certificate-templates.index') }}"
+                        class="bg-white border border-gray-200 text-primary hover:bg-primary-light py-2.5 px-6 rounded-2xl font-bold shadow-sm transition-all flex items-center gap-2 justify-center text-xs">
+                        <span class="iconify text-lg" data-icon="line-md:document-report"></span> Plantillas certificado
+                    </a>
+                    <a href="{{ route('clients.create') }}"
+                        class="bg-primary hover:bg-primary-hover text-white py-2.5 px-6 rounded-2xl font-bold shadow-md shadow-primary/10 hover:shadow-lg hover:shadow-primary/20 transition-all flex items-center gap-2 justify-center">
+                        <span class="iconify text-lg" data-icon="line-md:plus"></span> Nuevo cliente
+                    </a>
+                </div>
             </div>
 
             @if ($clients->isEmpty())
@@ -146,7 +152,22 @@
                                             <p class="text-[10px] font-bold text-gray-400 font-mono mt-0.5">{{ $client->finished_at->format('d/m/Y') }}</p>
                                         </td>
                                         <td class="px-6 py-4 text-right">
-                                            <div class="flex justify-end gap-2">
+                                            <div class="flex justify-end gap-2 flex-wrap">
+                                                @if ($certificateTemplates->isEmpty())
+                                                    <button type="button" disabled
+                                                        class="p-2 rounded-xl bg-gray-100 text-gray-300 cursor-not-allowed shadow-sm"
+                                                        title="Sube al menos una plantilla en Plantillas certificado">
+                                                        <span class="iconify text-lg" data-icon="line-md:document-report"></span>
+                                                    </button>
+                                                @else
+                                                    <button type="button"
+                                                        class="js-open-certificate p-2 rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white shadow-sm transition-all"
+                                                        title="Generar certificado PDF"
+                                                        data-client-id="{{ $client->id }}"
+                                                        data-client-name="{{ $client->full_name }}">
+                                                        <span class="iconify text-lg" data-icon="line-md:document-report"></span>
+                                                    </button>
+                                                @endif
                                                 <a href="{{ route('clients.edit', $client) }}" class="p-2 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white shadow-sm transition-all" title="Editar">
                                                     <span class="iconify text-lg" data-icon="line-md:pencil"></span>
                                                 </a>
@@ -168,4 +189,74 @@
             @endif
         </main>
     </div>
+
+    <dialog id="certificate-dialog"
+        class="w-[calc(100%-2rem)] max-w-md rounded-3xl border border-gray-100 bg-white p-0 shadow-2xl backdrop:bg-black/50">
+        <form id="certificate-form" method="POST" action="" class="p-6 flex flex-col gap-4">
+            @csrf
+            <div class="flex items-start justify-between gap-3">
+                <div>
+                    <h2 class="text-lg font-black text-gray-900 leading-tight">Certificado PDF</h2>
+                    <p id="certificate-dialog-subtitle" class="text-[11px] font-semibold text-gray-500 mt-1"></p>
+                </div>
+                <button type="button" id="certificate-dialog-close"
+                    class="p-2 rounded-xl bg-gray-50 text-gray-500 hover:bg-gray-100 shrink-0" aria-label="Cerrar">
+                    <span class="iconify text-lg" data-icon="line-md:close"></span>
+                </button>
+            </div>
+            <div>
+                <label class="block text-[10px] font-extrabold text-primary/60 uppercase tracking-widest mb-1.5">Plantilla</label>
+                <select name="certificate_template_id" required
+                    class="w-full px-4 py-3 rounded-2xl border border-gray-100 text-xs font-semibold bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/40">
+                    @foreach ($certificateTemplates as $tpl)
+                        <option value="{{ $tpl->id }}">{{ $tpl->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button type="button" id="certificate-dialog-cancel"
+                    class="py-2.5 px-4 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition-colors">
+                    Cancelar
+                </button>
+                <button type="submit"
+                    class="bg-primary hover:bg-primary-hover text-white py-2.5 px-5 rounded-xl text-xs font-black shadow-md shadow-primary/10 transition-all flex items-center gap-2">
+                    <span class="iconify" data-icon="line-md:download-loop"></span>
+                    Generar y descargar
+                </button>
+            </div>
+        </form>
+    </dialog>
+
+    <script>
+        (function () {
+            const dialog = document.getElementById('certificate-dialog');
+            const form = document.getElementById('certificate-form');
+            const subtitle = document.getElementById('certificate-dialog-subtitle');
+            const closeBtn = document.getElementById('certificate-dialog-close');
+            const cancelBtn = document.getElementById('certificate-dialog-cancel');
+            const baseUrl = @json(url('/clients'));
+
+            function closeDialog() {
+                dialog.close();
+            }
+
+            closeBtn.addEventListener('click', closeDialog);
+            cancelBtn.addEventListener('click', closeDialog);
+
+            dialog.addEventListener('cancel', function (e) {
+                e.preventDefault();
+                closeDialog();
+            });
+
+            document.querySelectorAll('.js-open-certificate').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    const id = btn.getAttribute('data-client-id');
+                    const name = btn.getAttribute('data-client-name') || '';
+                    form.action = baseUrl + '/' + encodeURIComponent(id) + '/certificate/pdf';
+                    subtitle.textContent = name ? name : '';
+                    dialog.showModal();
+                });
+            });
+        })();
+    </script>
 @endsection

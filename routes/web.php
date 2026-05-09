@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CertificateTemplateController;
+use App\Http\Controllers\ClientCertificateController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\LookupController;
 use App\Http\Controllers\SessionController;
@@ -31,4 +33,15 @@ Route::middleware(VerifyAuth::class)->group(function () {
     Route::get('/clients/{client}/edit', [ClientController::class, 'edit'])->name('clients.edit');
     Route::put('/clients/{client}', [ClientController::class, 'update'])->name('clients.update');
     Route::delete('/clients/{client}', [ClientController::class, 'destroy'])->name('clients.destroy');
+    Route::post('/clients/{client}/certificate/pdf', [ClientCertificateController::class, 'download'])
+        ->name('clients.certificate.pdf');
+
+    Route::get('/certificate-templates', [CertificateTemplateController::class, 'index'])->name('certificate-templates.index');
+    Route::post('/certificate-templates', [CertificateTemplateController::class, 'store'])->name('certificate-templates.store');
+    Route::get('/certificate-templates/{certificate_template}/edit', [CertificateTemplateController::class, 'edit'])
+        ->name('certificate-templates.edit');
+    Route::put('/certificate-templates/{certificate_template}', [CertificateTemplateController::class, 'update'])
+        ->name('certificate-templates.update');
+    Route::delete('/certificate-templates/{certificate_template}', [CertificateTemplateController::class, 'destroy'])
+        ->name('certificate-templates.destroy');
 });
