@@ -435,9 +435,9 @@
                 <div class="w-24 h-1 bg-[#4d4341] mx-auto"></div>
             </div>
 
-            <div class="flex justify-center mb-12">
+            {{-- <div class="flex justify-center mb-12">
                 <img src="{{ asset('images/ministerio/qr_certificado.jpeg') }}" alt="QR Certificado" class="w-48 h-48 object-contain rounded-lg">
-            </div>
+            </div> --}}
 
             <div class="flex flex-wrap md:flex-nowrap gap-4 items-stretch">
                 <!-- Parte 1: 1/5 -->
