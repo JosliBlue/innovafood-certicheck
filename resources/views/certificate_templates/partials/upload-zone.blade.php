@@ -39,7 +39,10 @@
         </div>
 
         {{-- Estado vacío --}}
-        <div class="cert-upload-empty @if ($hasExisting) hidden @endif px-5 py-8 sm:py-10 flex flex-col items-center text-center">
+        <div @class([
+            'cert-upload-empty px-5 py-8 sm:py-10 flex flex-col items-center text-center',
+            'hidden' => $hasExisting,
+        ])>
             <div class="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
                 <span class="iconify text-3xl" data-icon="line-md:upload-loop"></span>
             </div>

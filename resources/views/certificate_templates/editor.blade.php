@@ -92,7 +92,10 @@
                                 Sin imagen de página 1 en BD
                             </div>
                             <div id="cert-bg-back-empty"
-                                class="absolute inset-0 flex items-center justify-center bg-neutral-700 text-white/70 text-xs font-bold px-4 text-center pointer-events-none hidden">
+                                @class([
+                                    'absolute inset-0 flex items-center justify-center bg-neutral-700 text-white/70 text-xs font-bold px-4 text-center pointer-events-none',
+                                    'hidden' => $bgBackUrl !== '',
+                                ])>
                                 Sin imagen de página 2. Súbela en el panel →
                             </div>
                             @foreach ($editorRows as $row)

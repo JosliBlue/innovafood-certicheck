@@ -177,7 +177,11 @@
                                                     @csrf
                                                     <button type="submit"
                                                         @disabled(! $hasCertificateTemplate)
-                                                        class="@if ($hasCertificateTemplate) bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white @else bg-gray-100 text-gray-300 cursor-not-allowed @endif p-2 rounded-xl shadow-sm transition-all"
+                                                        @class([
+                                                            'p-2 rounded-xl shadow-sm transition-all',
+                                                            'bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white' => $hasCertificateTemplate,
+                                                            'bg-gray-100 text-gray-300 cursor-not-allowed' => ! $hasCertificateTemplate,
+                                                        ])
                                                         title="{{ $hasCertificateTemplate ? 'Generar certificado PDF' : 'No hay plantilla para «'.$client->course_name.'»' }}">
                                                         <span class="iconify text-lg" data-icon="line-md:download-loop"></span>
                                                     </button>
