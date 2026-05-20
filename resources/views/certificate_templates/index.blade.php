@@ -28,7 +28,6 @@
 
             <div class="relative max-w-4xl mx-auto text-center z-10">
                 <h1 class="text-white text-3xl font-black">Plantillas de <span class="text-white/40">certificado</span></h1>
-                <p class="text-white/60 text-xs font-semibold mt-2 max-w-2xl mx-auto leading-relaxed">Sube una imagen A4 apaisado como fondo. Después podrás <strong class="text-white/75">arrastrar y alinear</strong> cada dato (cédula, nombres, apellidos, curso, horas y fecha) sobre la vista previa, igual que en los carnets de Ligatactica.</p>
             </div>
         </header>
 
@@ -47,29 +46,43 @@
                     Nueva plantilla
                 </h2>
                 <form method="POST" action="{{ route('certificate-templates.store') }}" enctype="multipart/form-data"
-                    class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
+                    class="space-y-6">
                     @csrf
+
                     <div>
-                        <label class="block text-[10px] font-extrabold text-primary/60 uppercase tracking-widest mb-1.5">Nombre</label>
+                        <label class="block text-[10px] font-extrabold text-primary/60 uppercase tracking-widest mb-1.5">Nombre del curso</label>
                         <input type="text" name="name" value="{{ old('name') }}" required
                             class="w-full px-4 py-3 rounded-2xl border border-gray-100 text-xs font-semibold focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/40"
                             placeholder="Ej. Curso manipulación de alimentos">
+                        <p class="text-[10px] text-gray-400 mt-1">Debe coincidir exactamente con el nombre del curso en el registro del cliente.</p>
                         @error('name')
                             <p class="text-red-500 text-[10px] font-bold mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-                    <div>
-                        <label class="block text-[10px] font-extrabold text-primary/60 uppercase tracking-widest mb-1.5">Imagen de fondo</label>
-                        <input type="file" name="background" accept="image/jpeg,image/png,image/webp" required
-                            class="w-full text-xs font-semibold text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-primary file:text-white file:font-bold">
-                        <p class="text-[10px] text-gray-400 mt-1">Máx. ~30 MB en la aplicación; PHP suele limitar a 2 MB por defecto. Para desarrollo ejecuta <code class="font-mono bg-gray-100 px-1 rounded">composer dev</code> (sube límites). En producción ajusta php.ini o Nginx <code class="font-mono bg-gray-100 px-1 rounded">client_max_body_size</code>.</p>
-                        @error('background')
-                            <p class="text-red-500 text-[10px] font-bold mt-1">{{ $message }}</p>
-                        @enderror
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        @include('certificate_templates.partials.upload-zone', [
+                            'name' => 'background',
+                            'inputId' => 'upload-background',
+                            'label' => 'Página 1',
+                            'required' => true,
+                            'hint' => 'Fondo principal con los datos del alumno',
+                        ])
+                        @include('certificate_templates.partials.upload-zone', [
+                            'name' => 'background_back',
+                            'inputId' => 'upload-background-back',
+                            'label' => 'Página 2',
+                            'optional' => true,
+                            'hint' => 'Segunda hoja del PDF (sin campos editables)',
+                        ])
                     </div>
-                    <div class="sm:col-span-2 flex justify-end">
+
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2 border-t border-gray-100">
+                        <p class="text-[10px] text-gray-400 font-semibold max-w-md">
+                            Máximo 2&nbsp;MB por imagen
+                        </p>
                         <button type="submit"
-                            class="bg-primary hover:bg-primary-hover text-white font-black py-3 px-8 rounded-2xl shadow-md shadow-primary/10 hover:shadow-lg transition-all flex items-center gap-2">
+                            class="shrink-0 bg-primary hover:bg-primary-hover text-white font-black py-3 px-8 rounded-2xl shadow-md shadow-primary/10 hover:shadow-lg transition-all flex items-center justify-center gap-2">
                             <span class="iconify text-lg" data-icon="line-md:confirm"></span>
                             Crear y abrir editor
                         </button>
@@ -106,7 +119,10 @@
                                             <p class="text-[10px] text-gray-400 mt-0.5">
                                                 <span class="font-mono">{{ $template->background_mime ?? '—' }}</span>
                                                 @if ($approxKb !== null)
-                                                    <span class="text-gray-400"> · ~{{ $approxKb }} KB en BD</span>
+                                                    <span class="text-gray-400"> · ~{{ $approxKb }} KB página 1</span>
+                                                @endif
+                                                @if ($template->hasBackBackground())
+                                                    <span class="text-emerald-600 font-bold"> · PDF 2 páginas</span>
                                                 @endif
                                             </p>
                                         </td>

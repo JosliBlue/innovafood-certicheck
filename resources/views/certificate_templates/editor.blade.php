@@ -34,7 +34,7 @@
             <p class="max-w-6xl mx-auto mt-4 text-white/55 text-[11px] font-semibold leading-relaxed">
                 Misma grilla que los carnets Ligatactica: el lienzo mide <strong class="text-white/80">{{ $DW }}×{{ $DH }}</strong>
                 unidades de diseño; en PDF cada unidad equivale a <strong class="text-white/80">{{ \App\Models\CertificateTemplate::DESIGN_TO_MM }} mm</strong>.
-                Arrastra cada etiqueta sobre la imagen; a la derecha ajustas ancho, fuente por campo, tamaño y color (texto siempre alineado a la izquierda en el PDF).
+                Arrastra cada etiqueta sobre la <strong class="text-white/80">página 1</strong> (nombres y apellidos, cédula, fecha de finalización); en el panel puedes subir la <strong class="text-white/80">página 2</strong> para un PDF de dos hojas.
             </p>
         </header>
 
@@ -57,32 +57,52 @@
             @endif
 
             <form id="certificate-editor-form" method="POST" action="{{ route('certificate-templates.update', $template) }}"
+                enctype="multipart/form-data"
                 class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6 items-start">
                 @csrf
                 @method('PUT')
 
-                <div class="bg-white rounded-3xl border border-gray-100 shadow-xl p-4 sm:p-6 overflow-hidden">
+                <div class="bg-white rounded-3xl border border-gray-100 shadow-xl p-4 sm:p-6 overflow-hidden space-y-3">
+                    <div class="flex gap-2" role="tablist" aria-label="Cara del certificado">
+                        <button type="button" id="cert-side-front" data-cert-side="front"
+                            class="cert-side-tab flex-1 py-2.5 px-4 rounded-xl text-xs font-black border-2 border-primary bg-primary/10 text-primary transition-colors">
+                            Página 1
+                        </button>
+                        <button type="button" id="cert-side-back" data-cert-side="back"
+                            class="cert-side-tab flex-1 py-2.5 px-4 rounded-xl text-xs font-black border-2 border-gray-200 text-gray-500 hover:border-gray-300 transition-colors">
+                            Página 2
+                        </button>
+                    </div>
                     <div id="cert-canvas" class="rounded-2xl border border-gray-200 bg-gray-100 overflow-hidden select-none">
                         <div id="cert-inner"
                             class="relative w-full max-h-[70vh] mx-auto bg-neutral-800"
                             style="aspect-ratio: {{ $DW }} / {{ $DH }}; container-type: inline-size;">
-                            @if ($bgUrl !== '')
-                                <img src="{{ $bgUrl }}" alt="Fondo certificado"
-                                    class="absolute inset-0 w-full h-full object-cover pointer-events-none">
-                            @else
-                                <div
-                                    class="absolute inset-0 flex items-center justify-center bg-neutral-700 text-white/70 text-xs font-bold px-4 text-center pointer-events-none">
-                                    Sin imagen de fondo en BD
-                                </div>
-                            @endif
+                            <img id="cert-bg-front" src="{{ $bgUrl }}" alt="Página 1"
+                                @class([
+                                    'absolute inset-0 w-full h-full object-cover pointer-events-none',
+                                    'hidden' => $bgUrl === '',
+                                ])>
+                            <img id="cert-bg-back" src="{{ $bgBackUrl }}" alt="Página 2"
+                                class="absolute inset-0 w-full h-full object-cover pointer-events-none hidden">
+                            <div id="cert-bg-front-empty"
+                                @class([
+                                    'absolute inset-0 flex items-center justify-center bg-neutral-700 text-white/70 text-xs font-bold px-4 text-center pointer-events-none',
+                                    'hidden' => $bgUrl !== '',
+                                ])>
+                                Sin imagen de página 1 en BD
+                            </div>
+                            <div id="cert-bg-back-empty"
+                                class="absolute inset-0 flex items-center justify-center bg-neutral-700 text-white/70 text-xs font-bold px-4 text-center pointer-events-none hidden">
+                                Sin imagen de página 2. Súbela en el panel →
+                            </div>
                             @foreach ($editorRows as $row)
                                 @php
                                     $k = $row['field_key'];
                                 @endphp
-                                <button type="button" data-cert-field="{{ $k }}"
-                                    class="cert-field absolute z-10 rounded-lg border-2 border-dashed border-white/90 bg-black/50 px-1 py-0.5 text-white shadow-lg cursor-grab active:cursor-grabbing text-left overflow-hidden leading-tight hover:bg-black/65 hover:border-emerald-300 transition-colors">
-                                    <span class="pointer-events-none block truncate">{{ $row['label'] }}</span>
-                                </button>
+                                <div role="button" tabindex="0" data-cert-field="{{ $k }}"
+                                    class="cert-field absolute z-10 box-border m-0 p-0 text-white shadow-lg cursor-grab active:cursor-grabbing text-left overflow-hidden hover:bg-black/65 transition-colors">
+                                    <span class="pointer-events-none block truncate leading-none">{{ $row['label'] }}</span>
+                                </div>
                             @endforeach
                         </div>
                     </div>
@@ -90,10 +110,46 @@
 
                 <aside class="bg-white rounded-3xl border border-gray-100 shadow-xl p-6 space-y-5 lg:sticky lg:top-6">
                     <div>
-                        <label class="block text-[10px] font-extrabold text-primary/60 uppercase tracking-widest mb-1.5">Nombre de la plantilla</label>
+                        <label class="block text-[10px] font-extrabold text-primary/60 uppercase tracking-widest mb-1.5">Nombre del curso</label>
                         <input type="text" name="name" value="{{ old('name', $template->name) }}" required
                             class="w-full px-4 py-3 rounded-2xl border border-gray-100 text-xs font-bold focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary/40">
+                        <p class="text-[10px] text-gray-400 mt-1">Debe coincidir con el curso del cliente para imprimir su certificado.</p>
                     </div>
+
+                    <div class="rounded-2xl border border-gray-100 bg-gray-50/80 p-4 space-y-4">
+                        @if ($template->hasBackBackground())
+                            <div class="flex items-start gap-2 rounded-xl bg-emerald-50 border border-emerald-100 px-3 py-2.5">
+                                <span class="iconify text-lg text-emerald-600 shrink-0 mt-0.5" data-icon="mdi:check-circle"></span>
+                                <div>
+                                    <p class="text-[11px] font-bold text-emerald-800">Página 2 activa</p>
+                                    <p class="text-[10px] font-semibold text-emerald-700/80">El PDF se generará con 2 hojas.</p>
+                                </div>
+                            </div>
+                            <label class="flex items-center gap-2 text-[11px] font-bold text-gray-600 cursor-pointer px-1">
+                                <input type="checkbox" name="remove_background_back" value="1" class="rounded border-gray-300 text-primary focus:ring-primary/30">
+                                Quitar página 2 al guardar
+                            </label>
+                        @else
+                            <div class="flex items-start gap-2 rounded-xl bg-gray-100/80 border border-gray-200/80 px-3 py-2.5">
+                                <span class="iconify text-lg text-gray-400 shrink-0 mt-0.5" data-icon="mdi:file-document-outline"></span>
+                                <div>
+                                    <p class="text-[11px] font-bold text-gray-700">Solo página 1</p>
+                                    <p class="text-[10px] font-semibold text-gray-500">Sube una imagen para añadir la segunda hoja.</p>
+                                </div>
+                            </div>
+                        @endif
+
+                        @include('certificate_templates.partials.upload-zone', [
+                            'name' => 'background_back',
+                            'inputId' => 'upload-background-back-edit',
+                            'label' => 'Página 2',
+                            'optional' => true,
+                            'hint' => 'Mismo formato A4 que la página 1',
+                            'existingPreview' => $bgBackUrl !== '' ? $bgBackUrl : null,
+                        ])
+                    </div>
+
+                    <p class="text-[10px] font-extrabold text-primary/60 uppercase tracking-widest">Campos de la página 1</p>
 
                     @foreach ($editorRows as $row)
                         @php $fk = $row['field_key']; @endphp
@@ -165,6 +221,24 @@
         .cert-field-details[open] summary .cert-details-chevron {
             transform: rotate(180deg);
         }
+
+        /* Misma caja de texto que en pdf/certificate.blade.php (.field) */
+        .cert-field {
+            display: block;
+            line-height: 1;
+            background: rgba(0, 0, 0, 0.45);
+            outline: 2px dashed rgba(255, 255, 255, 0.9);
+            outline-offset: -2px;
+            border: none;
+            border-radius: 0.25rem;
+            vertical-align: top;
+        }
+
+        .cert-field:hover,
+        .cert-field.ring-4 {
+            outline-color: rgb(52, 211, 153);
+            background: rgba(0, 0, 0, 0.55);
+        }
     </style>
 
     <style>
@@ -189,10 +263,60 @@
             const DESIGN_H = {{ (int) $DH }};
             const form = document.getElementById('certificate-editor-form');
             const inner = document.getElementById('cert-inner');
+            const bgFront = document.getElementById('cert-bg-front');
+            const bgBack = document.getElementById('cert-bg-back');
+            const bgFrontEmpty = document.getElementById('cert-bg-front-empty');
+            const bgBackEmpty = document.getElementById('cert-bg-back-empty');
+            const sideTabs = document.querySelectorAll('[data-cert-side]');
             if (!form || !inner) return;
 
+            let activeSide = 'front';
+
+            function setActiveSide(side) {
+                activeSide = side;
+                const isFront = side === 'front';
+
+                if (bgFront) bgFront.classList.toggle('hidden', !isFront || !bgFront.getAttribute('src'));
+                if (bgBack) bgBack.classList.toggle('hidden', isFront || !bgBack.getAttribute('src'));
+                if (bgFrontEmpty) bgFrontEmpty.classList.toggle('hidden', !isFront || (bgFront && bgFront.getAttribute('src')));
+                if (bgBackEmpty) bgBackEmpty.classList.toggle('hidden', isFront || (bgBack && bgBack.getAttribute('src')));
+
+                inner.querySelectorAll('[data-cert-field]').forEach((btn) => {
+                    btn.classList.toggle('hidden', !isFront);
+                    btn.style.pointerEvents = isFront ? '' : 'none';
+                });
+
+                sideTabs.forEach((tab) => {
+                    const active = tab.getAttribute('data-cert-side') === side;
+                    tab.classList.toggle('border-primary', active);
+                    tab.classList.toggle('bg-primary/10', active);
+                    tab.classList.toggle('text-primary', active);
+                    tab.classList.toggle('border-gray-200', !active);
+                    tab.classList.toggle('text-gray-500', !active);
+                });
+            }
+
+            sideTabs.forEach((tab) => {
+                tab.addEventListener('click', () => setActiveSide(tab.getAttribute('data-cert-side') || 'front'));
+            });
+
+            const backFileInput = form.querySelector('[name="background_back"]');
+            if (backFileInput) {
+                backFileInput.addEventListener('change', () => {
+                    const file = backFileInput.files && backFileInput.files[0];
+                    if (!file || !bgBack) return;
+                    const url = URL.createObjectURL(file);
+                    bgBack.src = url;
+                    bgBack.classList.remove('hidden');
+                    if (bgBackEmpty) bgBackEmpty.classList.add('hidden');
+                    setActiveSide('back');
+                });
+            }
+
+            setActiveSide('front');
+
             function fieldHeight(fontSize) {
-                return Math.max(56, Number(fontSize) * 1.35);
+                return Number(fontSize);
             }
 
             function readField(key) {
@@ -236,7 +360,11 @@
                     btn.style.color = '#ffffff';
                     btn.style.textAlign = 'left';
                     btn.style.height = (h / DESIGN_H * 100) + '%';
-                    btn.style.lineHeight = '1.1';
+                    btn.style.lineHeight = '1';
+                    btn.style.padding = '0';
+                    btn.style.margin = '0';
+                    btn.style.boxSizing = 'border-box';
+                    btn.style.display = 'block';
 
                     btn.classList.remove('ring-4', 'ring-emerald-400', 'z-20');
                     btn.classList.add('z-10');
@@ -252,6 +380,7 @@
 
             inner.querySelectorAll('[data-cert-field]').forEach((btn) => {
                 btn.addEventListener('pointerdown', (ev) => {
+                    if (activeSide !== 'front') return;
                     ev.preventDefault();
                     const key = btn.getAttribute('data-cert-field');
                     btn.setPointerCapture(ev.pointerId);

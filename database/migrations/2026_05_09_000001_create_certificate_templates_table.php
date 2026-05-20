@@ -13,6 +13,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('background_mime', 128);
             $table->longText('background_base64');
+            $table->string('background_back_mime', 128)->nullable();
+            $table->longText('background_back_base64')->nullable();
             /** Posiciones por campo (coordenadas de diseño); ver CertificateTemplate::DESIGN_WIDTH / DESIGN_HEIGHT. */
             $table->json('fields')->nullable();
             $table->timestamps();

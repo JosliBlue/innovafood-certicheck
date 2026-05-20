@@ -20,8 +20,9 @@ class StoreCertificateTemplateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            /** max en kilobytes (~30 MB); debe ser menor que upload_max_filesize / post_max_size en php.ini */
-            'background' => ['required', 'file', 'image', 'mimes:jpeg,jpg,png,webp', 'max:30720'],
+            /** max en kilobytes (2 MB, upload_max_filesize por defecto en PHP). */
+            'background' => ['required', 'file', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
+            'background_back' => ['nullable', 'file', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
         ];
     }
 
@@ -32,7 +33,8 @@ class StoreCertificateTemplateRequest extends FormRequest
     {
         return [
             'background.uploaded' => $this->backgroundTooLargeHint(),
-            'background.max' => 'La imagen no puede superar :max kilobytes (~30 MB configurados en la app). Comprime el archivo o aumenta upload_max_filesize y post_max_size en PHP.',
+            'background.max' => 'La imagen no puede superar 2 MB (límite por defecto de PHP).',
+            'background_back.max' => 'La imagen no puede superar 2 MB (límite por defecto de PHP).',
         ];
     }
 
@@ -42,7 +44,8 @@ class StoreCertificateTemplateRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'background' => 'imagen de fondo',
+            'background' => 'imagen de la página 1',
+            'background_back' => 'imagen de la página 2',
         ];
     }
 
@@ -63,7 +66,7 @@ class StoreCertificateTemplateRequest extends FormRequest
     private function phpUploadErrorMessage(int $code): string
     {
         return match ($code) {
-            UPLOAD_ERR_INI_SIZE => 'La imagen supera el límite upload_max_filesize de PHP (ahora suele ser 2M por defecto). Sube una imagen más liviana o aumenta upload_max_filesize y post_max_size en php.ini; con composer puedes usar: composer dev (ya eleva límites al usar artisan serve).',
+            UPLOAD_ERR_INI_SIZE => 'La imagen supera el límite de 2 MB (upload_max_filesize por defecto en PHP). Comprime el archivo e inténtalo de nuevo.',
             UPLOAD_ERR_FORM_SIZE => 'La imagen supera el límite MAX_FILE_SIZE del formulario.',
             UPLOAD_ERR_PARTIAL => 'La subida quedó incompleta; vuelve a intentar.',
             UPLOAD_ERR_NO_FILE => 'No se recibió ningún archivo.',
@@ -76,6 +79,6 @@ class StoreCertificateTemplateRequest extends FormRequest
 
     private function backgroundTooLargeHint(): string
     {
-        return 'No se pudo subir la imagen. Suele deberse a que supera upload_max_filesize de PHP (por defecto 2M). Usa composer dev para desarrollo o edita php.ini (upload_max_filesize y post_max_size). Si usas Nginx, revisa también client_max_body_size.';
+        return 'No se pudo subir la imagen. El tamaño máximo es 2 MB (límite por defecto de PHP).';
     }
 }

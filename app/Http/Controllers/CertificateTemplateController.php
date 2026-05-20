@@ -6,11 +6,34 @@ use App\Http\Requests\StoreCertificateTemplateRequest;
 use App\Http\Requests\UpdateCertificateTemplateFieldsRequest;
 use App\Models\CertificateTemplate;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controller;
 use Illuminate\View\View;
 
 class CertificateTemplateController extends Controller
 {
+    /**
+     * @return array{background_mime: string, background_base64: string}
+     */
+    private function encodeBackgroundFile(UploadedFile $file): array
+    {
+        return [
+            'background_mime' => $file->getMimeType() ?: 'application/octet-stream',
+            'background_base64' => base64_encode($file->getContent()),
+        ];
+    }
+
+    /**
+     * @return array{background_back_mime: string, background_back_base64: string}
+     */
+    private function encodeBackgroundBackFile(UploadedFile $file): array
+    {
+        return [
+            'background_back_mime' => $file->getMimeType() ?: 'application/octet-stream',
+            'background_back_base64' => base64_encode($file->getContent()),
+        ];
+    }
+
     public function index(): View
     {
         $templates = CertificateTemplate::query()->orderBy('name')->get();
@@ -21,15 +44,18 @@ class CertificateTemplateController extends Controller
     public function store(StoreCertificateTemplateRequest $request): RedirectResponse
     {
         $file = $request->file('background');
-        $mime = $file->getMimeType() ?: 'application/octet-stream';
-        $binary = $file->getContent();
-
-        $template = CertificateTemplate::query()->create([
+        $payload = [
             'name' => $request->validated('name'),
-            'background_mime' => $mime,
-            'background_base64' => base64_encode($binary),
+            ...$this->encodeBackgroundFile($file),
             'fields' => CertificateTemplate::defaultFieldsKeyed(),
-        ]);
+        ];
+
+        $backFile = $request->file('background_back');
+        if ($backFile instanceof UploadedFile) {
+            $payload = array_merge($payload, $this->encodeBackgroundBackFile($backFile));
+        }
+
+        $template = CertificateTemplate::query()->create($payload);
 
         return redirect()->route('certificate-templates.edit', $template)
             ->with('success', 'Plantilla creada. Arrastra las cajas o usa los números del panel para colocar cada dato.');
@@ -46,6 +72,7 @@ class CertificateTemplateController extends Controller
         }
 
         $bgUrl = $certificate_template->backgroundDataUri() ?? '';
+        $bgBackUrl = $certificate_template->backgroundBackDataUri() ?? '';
 
         /** @var array<string, array{label: string, css_family: string, faces: array<int, array<string, mixed>>}> $certificateFontFamilies */
         $certificateFontFamilies = config('certificate_fonts.families', []);
@@ -54,6 +81,7 @@ class CertificateTemplateController extends Controller
             'template' => $certificate_template,
             'editorRows' => $editorRows,
             'bgUrl' => $bgUrl,
+            'bgBackUrl' => $bgBackUrl,
             'certificateFontFamilies' => $certificateFontFamilies,
         ]);
     }
@@ -62,10 +90,22 @@ class CertificateTemplateController extends Controller
     {
         $validated = $request->validated();
 
-        $certificate_template->update([
+        $update = [
             'name' => $validated['name'],
             'fields' => $validated['fields'],
-        ]);
+        ];
+
+        if ($request->boolean('remove_background_back')) {
+            $update['background_back_mime'] = null;
+            $update['background_back_base64'] = null;
+        }
+
+        $backFile = $request->file('background_back');
+        if ($backFile instanceof UploadedFile) {
+            $update = array_merge($update, $this->encodeBackgroundBackFile($backFile));
+        }
+
+        $certificate_template->update($update);
 
         return redirect()->route('certificate-templates.edit', $certificate_template)
             ->with('success', 'Diseño guardado correctamente.');

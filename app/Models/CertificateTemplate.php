@@ -14,30 +14,31 @@ class CertificateTemplate extends Model
 
     public const DESIGN_TO_MM = 0.1;
 
+    /**
+     * DomPDF coloca la primera línea por debajo del borde superior del bloque (métricas de fuente).
+     */
+    public const PDF_Y_CORRECTION_FACTOR = 0.40;
+
     /** Orden de pintado en el PDF (debajo → arriba visualmente por z-index si hace falta). */
     public const FIELD_KEYS = [
-        'first_names',
-        'last_names',
+        'full_name',
         'id_card',
-        'course_name',
-        'academic_hours',
         'finished_at',
     ];
 
     /** @var array<string, string> */
     public const FIELD_LABELS = [
-        'first_names' => 'Nombres',
-        'last_names' => 'Apellidos',
+        'full_name' => 'Nombres y apellidos',
         'id_card' => 'Cédula',
-        'course_name' => 'Nombre del curso',
-        'academic_hours' => 'Horas cursadas',
-        'finished_at' => 'Fecha finalización',
+        'finished_at' => 'Fecha de finalización',
     ];
 
     protected $fillable = [
         'name',
         'background_mime',
         'background_base64',
+        'background_back_mime',
+        'background_back_base64',
         'fields',
     ];
 
@@ -60,6 +61,23 @@ class CertificateTemplate extends Model
         return 'data:'.$mime.';base64,'.$data;
     }
 
+    public function backgroundBackDataUri(): ?string
+    {
+        $mime = $this->background_back_mime;
+        $data = $this->background_back_base64;
+
+        if ($mime === null || $mime === '' || $data === null || $data === '') {
+            return null;
+        }
+
+        return 'data:'.$mime.';base64,'.$data;
+    }
+
+    public function hasBackBackground(): bool
+    {
+        return $this->backgroundBackDataUri() !== null;
+    }
+
     /**
      * Definición por defecto por field_key (coordenadas en espacio de diseño).
      *
@@ -70,20 +88,10 @@ class CertificateTemplate extends Model
     public static function defaultFieldsKeyed(): array
     {
         return [
-            'first_names' => [
-                'field_key' => 'first_names',
+            'full_name' => [
+                'field_key' => 'full_name',
                 'x' => 400,
-                'y' => 620,
-                'width' => 2170,
-                'font_size' => 130,
-                'font_color' => '#1a1a1a',
-                'font_weight' => 'bold',
-                'font_family' => 'dejavu_sans',
-            ],
-            'last_names' => [
-                'field_key' => 'last_names',
-                'x' => 400,
-                'y' => 800,
+                'y' => 700,
                 'width' => 2170,
                 'font_size' => 130,
                 'font_color' => '#1a1a1a',
@@ -93,29 +101,9 @@ class CertificateTemplate extends Model
             'id_card' => [
                 'field_key' => 'id_card',
                 'x' => 400,
-                'y' => 980,
+                'y' => 920,
                 'width' => 2170,
                 'font_size' => 85,
-                'font_color' => '#333333',
-                'font_weight' => 'normal',
-                'font_family' => 'dejavu_sans',
-            ],
-            'course_name' => [
-                'field_key' => 'course_name',
-                'x' => 320,
-                'y' => 1160,
-                'width' => 2330,
-                'font_size' => 95,
-                'font_color' => '#1a1a1a',
-                'font_weight' => 'normal',
-                'font_family' => 'dejavu_sans',
-            ],
-            'academic_hours' => [
-                'field_key' => 'academic_hours',
-                'x' => 400,
-                'y' => 1340,
-                'width' => 2170,
-                'font_size' => 75,
                 'font_color' => '#333333',
                 'font_weight' => 'normal',
                 'font_family' => 'dejavu_sans',
@@ -123,7 +111,7 @@ class CertificateTemplate extends Model
             'finished_at' => [
                 'field_key' => 'finished_at',
                 'x' => 400,
-                'y' => 1510,
+                'y' => 1100,
                 'width' => 2170,
                 'font_size' => 75,
                 'font_color' => '#333333',
@@ -142,6 +130,10 @@ class CertificateTemplate extends Model
     {
         $defaults = self::defaultFieldsKeyed();
         $stored = is_array($this->fields) ? $this->fields : [];
+
+        if (! isset($stored['full_name']) && is_array($stored['first_names'] ?? null)) {
+            $stored['full_name'] = $stored['first_names'];
+        }
 
         $out = [];
         foreach (self::FIELD_KEYS as $key) {
@@ -170,5 +162,23 @@ class CertificateTemplate extends Model
         }
 
         return $list;
+    }
+
+    public static function normalizeCourseName(string $courseName): string
+    {
+        return mb_strtolower(trim($courseName));
+    }
+
+    public static function findForCourseName(string $courseName): ?self
+    {
+        $normalized = self::normalizeCourseName($courseName);
+
+        if ($normalized === '') {
+            return null;
+        }
+
+        return self::query()
+            ->get()
+            ->first(fn (self $template): bool => self::normalizeCourseName($template->name) === $normalized);
     }
 }

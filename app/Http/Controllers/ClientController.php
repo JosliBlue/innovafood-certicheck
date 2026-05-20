@@ -27,9 +27,12 @@ class ClientController extends Controller
         }
 
         $clients = $query->orderBy('last_names')->get();
-        $certificateTemplates = CertificateTemplate::query()->orderBy('name')->get();
+        $certificateTemplatesByCourse = CertificateTemplate::query()
+            ->orderBy('name')
+            ->get()
+            ->keyBy(fn (CertificateTemplate $template): string => CertificateTemplate::normalizeCourseName($template->name));
 
-        return view('clients.index', compact('clients', 'certificateTemplates'));
+        return view('clients.index', compact('clients', 'certificateTemplatesByCourse'));
     }
 
     public function create(): View

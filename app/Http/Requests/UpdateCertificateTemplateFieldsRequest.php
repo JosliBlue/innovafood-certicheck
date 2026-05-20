@@ -20,6 +20,8 @@ class UpdateCertificateTemplateFieldsRequest extends FormRequest
     {
         $rules = [
             'name' => ['required', 'string', 'max:255'],
+            'background_back' => ['nullable', 'file', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
+            'remove_background_back' => ['sometimes', 'boolean'],
         ];
 
         $fontFamilyKeys = array_keys(config('certificate_fonts.families', []));

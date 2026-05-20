@@ -23,6 +23,11 @@
             height: 210mm;
             position: relative;
             overflow: hidden;
+            page-break-after: always;
+        }
+
+        .page:last-child {
+            page-break-after: auto;
         }
 
         .bg {
@@ -41,11 +46,16 @@
 
         .field {
             position: absolute;
-            line-height: 1.2;
+            margin: 0;
+            padding: 0;
+            line-height: 1;
+            height: auto;
             z-index: 1;
             word-wrap: break-word;
             overflow-wrap: break-word;
             white-space: normal;
+            box-sizing: border-box;
+            vertical-align: top;
         }
     </style>
 </head>
@@ -60,11 +70,19 @@
 
         @foreach ($pdf_fields as $field)
             <div class="field"
-                style="left: {{ $field['x_mm'] }}mm; top: {{ $field['y_mm'] }}mm; width: {{ $field['width_mm'] }}mm; font-size: {{ $field['font_size_mm'] }}mm; color: {{ $field['font_color'] }}; font-weight: {{ $field['font_weight'] }}; font-family: '{{ $field['font_css_family'] }}', DejaVu Sans, sans-serif; text-align: {{ $field['text_align'] }};">
+                style="left: {{ $field['x_mm'] }}mm; top: {{ $field['y_mm'] }}mm; width: {{ $field['width_mm'] }}mm; height: {{ $field['line_height_mm'] }}mm; font-size: {{ $field['font_size_mm'] }}mm; line-height: {{ $field['line_height_mm'] }}mm; color: {{ $field['font_color'] }}; font-weight: {{ $field['font_weight'] }}; font-family: '{{ $field['font_css_family'] }}', DejaVu Sans, sans-serif; text-align: {{ $field['text_align'] }};">
                 {{ $field['value'] }}
             </div>
         @endforeach
     </div>
+
+    @if (!empty($background_back_data_uri))
+        <div class="page">
+            <div class="bg">
+                <img src="{{ $background_back_data_uri }}" alt="">
+            </div>
+        </div>
+    @endif
 </body>
 
 </html>

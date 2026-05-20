@@ -80,11 +80,8 @@ class CertificatePdfService
         $key = $field['field_key'] ?? '';
 
         $value = match ($key) {
-            'first_names' => $client->first_names,
-            'last_names' => $client->last_names,
-            'id_card' => 'C.I. '.$client->id_card,
-            'course_name' => $client->course_name,
-            'academic_hours' => $client->academic_hours.' horas cursadas',
+            'full_name' => trim($client->full_name),
+            'id_card' => $client->id_card,
             'finished_at' => $client->finished_at->format('d/m/Y'),
             default => '',
         };
@@ -92,13 +89,20 @@ class CertificatePdfService
         $fontFamilyKey = is_string($field['font_family'] ?? null) ? $field['font_family'] : 'dejavu_sans';
         $fontDef = $this->resolveFontDefinition($fontFamilyKey);
 
+        $fontSizeDesign = is_numeric($field['font_size'] ?? null) ? (float) $field['font_size'] : 12.0;
+        $yDesign = is_numeric($field['y'] ?? null) ? (float) $field['y'] : 0.0;
+        $yCorrection = ($fontSizeDesign * CertificateTemplate::PDF_Y_CORRECTION_FACTOR) + 12.0;
+        $yDesign = max(0.0, $yDesign - $yCorrection);
+        $fontSizeMm = $this->designToMm($fontSizeDesign);
+
         return [
             'field_key' => $key,
             'value' => $value,
             'x_mm' => $this->designToMm($field['x'] ?? 0),
-            'y_mm' => $this->designToMm($field['y'] ?? 0),
+            'y_mm' => $this->designToMm($yDesign),
             'width_mm' => $this->designToMm($field['width'] ?? 100),
-            'font_size_mm' => $this->designToMm($field['font_size'] ?? 12),
+            'font_size_mm' => $fontSizeMm,
+            'line_height_mm' => $fontSizeMm,
             'font_color' => $field['font_color'] ?? '#111111',
             'font_weight' => $field['font_weight'] ?? 'normal',
             'font_css_family' => $fontDef['css_family'],
@@ -124,6 +128,7 @@ class CertificatePdfService
 
         return [
             'background_data_uri' => $this->backgroundDataUri($template),
+            'background_back_data_uri' => $template->backgroundBackDataUri(),
             'pdf_fields' => collect($ordered)
                 ->map(fn (array $field) => $this->mapFieldForPdf($field, $client))
                 ->values()
