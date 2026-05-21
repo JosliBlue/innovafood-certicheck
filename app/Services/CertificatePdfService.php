@@ -10,6 +10,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CertificatePdfService
 {
+    private function ensureDompdfFontDirectoryExists(): void
+    {
+        $fontDir = storage_path('fonts');
+
+        if (! is_dir($fontDir)) {
+            mkdir($fontDir, 0755, true);
+        }
+    }
+
     /**
      * Incrusta TTF como data URI para DomPDF (evita HTTP remoto con isRemoteEnabled).
      *
@@ -147,12 +156,16 @@ class CertificatePdfService
 
     public function download(Client $client, CertificateTemplate $template): Response
     {
+        $this->ensureDompdfFontDirectoryExists();
+
         $payload = $this->viewPayload($client, $template);
 
         $pdf = PdfFacade::setOptions([
             'isRemoteEnabled' => false,
             'isHtml5ParserEnabled' => true,
-        ])->loadView('pdf.certificate', $payload)->setPaper('a4', 'landscape');
+        ], mergeWithDefaults: true)
+            ->loadView('pdf.certificate', $payload)
+            ->setPaper('a4', 'landscape');
 
         return $pdf->download($this->filename($client, $template));
     }
