@@ -23,10 +23,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useTailwind();
 
-        $dompdfFontDir = storage_path('fonts');
-
-        if (! is_dir($dompdfFontDir)) {
-            mkdir($dompdfFontDir, 0755, true);
+        foreach ([storage_path('fonts'), storage_path('app/dompdf-tmp')] as $directory) {
+            if (! is_dir($directory)) {
+                mkdir($directory, 0755, true);
+            }
         }
 
         if (config('app.env') === 'production') {

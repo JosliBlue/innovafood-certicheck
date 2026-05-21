@@ -10,17 +10,55 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CertificatePdfService
 {
-    private function ensureDompdfFontDirectoryExists(): void
+    private function dompdfFontDirectory(): string
     {
-        $fontDir = storage_path('fonts');
+        foreach ([storage_path('fonts'), sys_get_temp_dir().'/innovafood-dompdf-fonts'] as $fontDir) {
+            if (! is_dir($fontDir)) {
+                mkdir($fontDir, 0755, true);
+            }
 
-        if (! is_dir($fontDir)) {
-            mkdir($fontDir, 0755, true);
+            if (is_dir($fontDir) && is_writable($fontDir)) {
+                return $fontDir;
+            }
         }
+
+        throw new \RuntimeException('No hay un directorio escribible para las fuentes del PDF.');
+    }
+
+    private function dompdfTempDirectory(): string
+    {
+        $tempDir = storage_path('app/dompdf-tmp');
+
+        if (! is_dir($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+
+        if (is_dir($tempDir) && is_writable($tempDir)) {
+            return $tempDir;
+        }
+
+        return sys_get_temp_dir();
     }
 
     /**
-     * Incrusta TTF como data URI para DomPDF (evita HTTP remoto con isRemoteEnabled).
+     * @return array<string, mixed>
+     */
+    private function dompdfOptions(): array
+    {
+        $fontDir = $this->dompdfFontDirectory();
+
+        return array_merge(config('dompdf.options', []), [
+            'font_dir' => $fontDir,
+            'font_cache' => $fontDir,
+            'temp_dir' => $this->dompdfTempDirectory(),
+            'chroot' => realpath(base_path()) ?: base_path(),
+            'isRemoteEnabled' => false,
+            'isHtml5ParserEnabled' => true,
+        ]);
+    }
+
+    /**
+     * Referencia TTF locales (file://) para DomPDF; evita data URI enormes y escritura en vendor/.
      *
      * @param  array<int, string>  $fontFamilyKeys
      */
@@ -41,22 +79,66 @@ class CertificatePdfService
                 if ($path === '') {
                     continue;
                 }
-                $fullPath = public_path($path);
-                if (! is_readable($fullPath)) {
+                $fullPath = realpath(public_path($path));
+                if ($fullPath === false || ! is_readable($fullPath)) {
                     continue;
                 }
-                $binary = @file_get_contents($fullPath);
-                if ($binary === false || $binary === '') {
-                    continue;
-                }
-                $dataUri = 'data:font/ttf;base64,'.base64_encode($binary);
                 $weight = $face['weight'] ?? 'normal';
                 $style = $face['style'] ?? 'normal';
-                $blocks[] = "@font-face{font-family:'{$family}';src:url('{$dataUri}') format('truetype');font-weight:{$weight};font-style:{$style};}";
+                $blocks[] = "@font-face{font-family:'{$family}';src:url('file://{$fullPath}') format('truetype');font-weight:{$weight};font-style:{$style};}";
             }
         }
 
         return implode("\n", $blocks);
+    }
+
+    private function optimizeImageDataUri(?string $dataUri, int $maxWidthPx = 2480): ?string
+    {
+        if ($dataUri === null || $dataUri === '' || ! extension_loaded('gd')) {
+            return $dataUri;
+        }
+
+        if (! preg_match('#^data:(image/[a-zA-Z0-9.+-]+);base64,(.+)$#', $dataUri, $matches)) {
+            return $dataUri;
+        }
+
+        $binary = base64_decode($matches[2], true);
+        if ($binary === false || $binary === '') {
+            return $dataUri;
+        }
+
+        $image = @imagecreatefromstring($binary);
+        if ($image === false) {
+            return $dataUri;
+        }
+
+        $width = imagesx($image);
+        $height = imagesy($image);
+
+        if ($width <= $maxWidthPx) {
+            imagedestroy($image);
+
+            return $dataUri;
+        }
+
+        $newHeight = (int) round($height * ($maxWidthPx / $width));
+        $resized = imagescale($image, $maxWidthPx, $newHeight);
+        imagedestroy($image);
+
+        if ($resized === false) {
+            return $dataUri;
+        }
+
+        ob_start();
+        imagejpeg($resized, null, 85);
+        imagedestroy($resized);
+        $jpeg = ob_get_clean();
+
+        if ($jpeg === false || $jpeg === '') {
+            return $dataUri;
+        }
+
+        return 'data:image/jpeg;base64,'.base64_encode($jpeg);
     }
 
     /**
@@ -136,8 +218,8 @@ class CertificatePdfService
         }
 
         return [
-            'background_data_uri' => $this->backgroundDataUri($template),
-            'background_back_data_uri' => $template->backgroundBackDataUri(),
+            'background_data_uri' => $this->optimizeImageDataUri($this->backgroundDataUri($template)),
+            'background_back_data_uri' => $this->optimizeImageDataUri($template->backgroundBackDataUri()),
             'pdf_fields' => collect($ordered)
                 ->map(fn (array $field) => $this->mapFieldForPdf($field, $client))
                 ->values()
@@ -156,14 +238,15 @@ class CertificatePdfService
 
     public function download(Client $client, CertificateTemplate $template): Response
     {
-        $this->ensureDompdfFontDirectoryExists();
+        if (! extension_loaded('gd')) {
+            throw new \RuntimeException('La extensión PHP GD es necesaria para generar certificados PDF.');
+        }
+
+        @ini_set('memory_limit', '512M');
 
         $payload = $this->viewPayload($client, $template);
 
-        $pdf = PdfFacade::setOptions([
-            'isRemoteEnabled' => false,
-            'isHtml5ParserEnabled' => true,
-        ], mergeWithDefaults: true)
+        $pdf = PdfFacade::setOptions($this->dompdfOptions())
             ->loadView('pdf.certificate', $payload)
             ->setPaper('a4', 'landscape');
 

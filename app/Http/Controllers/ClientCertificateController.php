@@ -29,14 +29,21 @@ class ClientCertificateController extends Controller
         try {
             $response = $this->certificatePdfService->download($client, $template);
         } catch (Throwable $exception) {
-            Log::error('Error al generar certificado PDF', [
+            Log::error('Error al generar certificado PDF: '.$exception->getMessage(), [
                 'client_id' => $client->id,
                 'course_name' => $client->course_name,
+                'template_id' => $template->id,
                 'exception' => $exception,
             ]);
 
+            $message = 'No se pudo generar el certificado PDF. Intenta de nuevo o contacta al administrador.';
+
+            if (config('app.debug')) {
+                $message .= ' ('.$exception->getMessage().')';
+            }
+
             return redirect()->route('clients.index')
-                ->with('error', 'No se pudo generar el certificado PDF. Intenta de nuevo o contacta al administrador.');
+                ->with('error', $message);
         }
 
         $client->update(['certificate_printed' => true]);
