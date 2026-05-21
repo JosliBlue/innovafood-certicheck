@@ -40,11 +40,6 @@
             </div>
 
             {{-- Stats Floating Section (Replicating search absolute bottom frame) --}}
-            @php
-                $total = $clients->count();
-                $expired = $clients->filter(fn($c) => $c->finished_at->copy()->addYear()->isPast())->count();
-                $active = $total - $expired;
-            @endphp
             <div class="absolute left-1/2 -bottom-10 -translate-x-1/2 w-full max-w-xl px-4 z-20">
                 <div class="grid grid-cols-3 gap-3">
                     <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-xl flex flex-col items-center">
@@ -203,6 +198,19 @@
                             </tbody>
                         </table>
                     </div>
+
+                    @if ($clients->hasPages())
+                        <div class="px-6 py-4 border-t border-gray-100/60 bg-gray-50/30 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <p class="text-[11px] font-bold text-gray-500">
+                                Mostrando
+                                <span class="text-gray-800">{{ $clients->firstItem() }}–{{ $clients->lastItem() }}</span>
+                                de
+                                <span class="text-gray-800">{{ $clients->total() }}</span>
+                                clientes
+                            </p>
+                            {{ $clients->links() }}
+                        </div>
+                    @endif
                 </div>
             @endif
         </main>

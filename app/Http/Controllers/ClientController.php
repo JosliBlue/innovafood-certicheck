@@ -6,6 +6,7 @@ use App\Http\Requests\StoreClientRequest;
 use App\Http\Requests\UpdateClientRequest;
 use App\Models\CertificateTemplate;
 use App\Models\Client;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -13,7 +14,7 @@ use Illuminate\View\View;
 
 class ClientController extends Controller
 {
-    public function index(Request $request): View
+    private function clientsIndexQuery(Request $request): Builder
     {
         $query = Client::query();
 
@@ -26,13 +27,36 @@ class ClientController extends Controller
             });
         }
 
-        $clients = $query->orderBy('last_names')->get();
+        return $query;
+    }
+
+    public function index(Request $request): View
+    {
+        $query = $this->clientsIndexQuery($request);
+
+        $total = (clone $query)->count();
+        $expired = (clone $query)
+            ->where('finished_at', '<', now()->subYear()->toDateString())
+            ->count();
+        $active = $total - $expired;
+
+        $clients = (clone $query)
+            ->orderBy('last_names')
+            ->paginate(20)
+            ->withQueryString();
+
         $certificateTemplatesByCourse = CertificateTemplate::query()
             ->orderBy('name')
             ->get()
             ->keyBy(fn (CertificateTemplate $template): string => CertificateTemplate::normalizeCourseName($template->name));
 
-        return view('clients.index', compact('clients', 'certificateTemplatesByCourse'));
+        return view('clients.index', compact(
+            'clients',
+            'certificateTemplatesByCourse',
+            'total',
+            'active',
+            'expired',
+        ));
     }
 
     public function create(): View
