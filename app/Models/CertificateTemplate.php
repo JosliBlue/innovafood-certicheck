@@ -177,8 +177,19 @@ class CertificateTemplate extends Model
             return null;
         }
 
-        return self::query()
-            ->get()
-            ->first(fn (self $template): bool => self::normalizeCourseName($template->name) === $normalized);
+        $templateId = null;
+
+        foreach (self::query()->select(['id', 'name'])->cursor() as $template) {
+            if (self::normalizeCourseName($template->name) === $normalized) {
+                $templateId = $template->id;
+                break;
+            }
+        }
+
+        if ($templateId === null) {
+            return null;
+        }
+
+        return self::query()->find($templateId);
     }
 }

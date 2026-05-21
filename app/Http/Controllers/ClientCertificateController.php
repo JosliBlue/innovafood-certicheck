@@ -7,7 +7,9 @@ use App\Models\Client;
 use App\Services\CertificatePdfService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class ClientCertificateController extends Controller
 {
@@ -24,8 +26,21 @@ class ClientCertificateController extends Controller
                 ->with('error', "No hay plantilla de certificado para el curso «{$client->course_name}». Crea una plantilla con el mismo nombre del curso.");
         }
 
+        try {
+            $response = $this->certificatePdfService->download($client, $template);
+        } catch (Throwable $exception) {
+            Log::error('Error al generar certificado PDF', [
+                'client_id' => $client->id,
+                'course_name' => $client->course_name,
+                'exception' => $exception,
+            ]);
+
+            return redirect()->route('clients.index')
+                ->with('error', 'No se pudo generar el certificado PDF. Intenta de nuevo o contacta al administrador.');
+        }
+
         $client->update(['certificate_printed' => true]);
 
-        return $this->certificatePdfService->download($client, $template);
+        return $response;
     }
 }

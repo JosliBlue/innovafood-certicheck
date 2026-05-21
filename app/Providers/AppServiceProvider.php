@@ -20,6 +20,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $dompdfFontDir = storage_path('fonts');
+
+        if (! is_dir($dompdfFontDir)) {
+            mkdir($dompdfFontDir, 0755, true);
+        }
+
         if (config('app.env') === 'production') {
             URL::forceScheme('https');
         }
