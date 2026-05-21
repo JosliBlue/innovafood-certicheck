@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
 
 class Client extends Model
 {
@@ -14,6 +14,7 @@ class Client extends Model
         'course_name',
         'finished_at',
         'academic_hours',
+        'certificate_printed',
     ];
 
     protected function casts(): array
@@ -22,13 +23,14 @@ class Client extends Model
             'id_card' => 'string',
             'finished_at' => 'date',
             'academic_hours' => 'integer',
+            'certificate_printed' => 'boolean',
         ];
     }
 
     protected function fullName(): Attribute
     {
         return Attribute::make(
-            get: fn() => "{$this->first_names} {$this->last_names}",
+            get: fn () => "{$this->first_names} {$this->last_names}",
         );
     }
 }

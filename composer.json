@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.4",
+        "barryvdh/laravel-dompdf": "^3.1",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0"
     },
@@ -51,7 +52,7 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "@php artisan serve"
+            "@php -d upload_max_filesize=32M -d post_max_size=36M artisan serve"
         ],
         "clear": [
             "@php artisan config:clear",

@@ -87,11 +87,29 @@
                     </div>
                 </form>
 
-                <a href="{{ route('clients.create') }}"
-                    class="bg-primary hover:bg-primary-hover text-white py-2.5 px-6 rounded-2xl font-bold shadow-md shadow-primary/10 hover:shadow-lg hover:shadow-primary/20 transition-all flex items-center gap-2 w-full sm:w-auto justify-center">
-                    <span class="iconify text-lg" data-icon="line-md:plus"></span> Nuevo cliente
-                </a>
+                <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <a href="{{ route('certificate-templates.index') }}"
+                        class="bg-white border border-gray-200 text-primary hover:bg-primary-light py-2.5 px-6 rounded-2xl font-bold shadow-sm transition-all flex items-center gap-2 justify-center text-xs">
+                        <span class="iconify text-lg" data-icon="line-md:document-report"></span> Plantillas certificado
+                    </a>
+                    <a href="{{ route('clients.create') }}"
+                        class="bg-primary hover:bg-primary-hover text-white py-2.5 px-6 rounded-2xl font-bold shadow-md shadow-primary/10 hover:shadow-lg hover:shadow-primary/20 transition-all flex items-center gap-2 justify-center">
+                        <span class="iconify text-lg" data-icon="line-md:plus"></span> Nuevo cliente
+                    </a>
+                </div>
             </div>
+
+            @if (session('success'))
+                <div class="mb-4 bg-green-50 border border-green-100 text-green-800 text-xs font-bold px-4 py-3 rounded-2xl">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="mb-4 bg-red-50 border border-red-100 text-red-800 text-xs font-bold px-4 py-3 rounded-2xl">
+                    {{ session('error') }}
+                </div>
+            @endif
 
             @if ($clients->isEmpty())
                 <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-16 flex flex-col items-center justify-center text-gray-400">
@@ -114,6 +132,8 @@
                                 @foreach ($clients as $client)
                                     @php
                                         $isExpired = $client->finished_at->copy()->addYear()->isPast();
+                                        $courseKey = \App\Models\CertificateTemplate::normalizeCourseName($client->course_name);
+                                        $hasCertificateTemplate = $certificateTemplatesByCourse->has($courseKey);
                                         $styles = $isExpired ? [
                                             'bg' => 'bg-orange-500 shadow-orange-100',
                                             'text' => 'text-orange-600',
@@ -146,7 +166,26 @@
                                             <p class="text-[10px] font-bold text-gray-400 font-mono mt-0.5">{{ $client->finished_at->format('d/m/Y') }}</p>
                                         </td>
                                         <td class="px-6 py-4 text-right">
-                                            <div class="flex justify-end gap-2">
+                                            <div class="flex justify-end items-center gap-2 flex-wrap">
+                                                @if ($client->certificate_printed)
+                                                    <span class="p-2 rounded-xl bg-emerald-50 text-emerald-600 shrink-0"
+                                                        title="Certificado ya impreso">
+                                                        <span class="iconify text-lg" data-icon="mdi:check-circle"></span>
+                                                    </span>
+                                                @endif
+                                                <form method="POST" action="{{ route('clients.certificate.pdf', $client) }}" class="inline">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        @disabled(! $hasCertificateTemplate)
+                                                        @class([
+                                                            'p-2 rounded-xl shadow-sm transition-all',
+                                                            'bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white' => $hasCertificateTemplate,
+                                                            'bg-gray-100 text-gray-300 cursor-not-allowed' => ! $hasCertificateTemplate,
+                                                        ])
+                                                        title="{{ $hasCertificateTemplate ? 'Generar certificado PDF' : 'No hay plantilla para «'.$client->course_name.'»' }}">
+                                                        <span class="iconify text-lg" data-icon="line-md:download-loop"></span>
+                                                    </button>
+                                                </form>
                                                 <a href="{{ route('clients.edit', $client) }}" class="p-2 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white shadow-sm transition-all" title="Editar">
                                                     <span class="iconify text-lg" data-icon="line-md:pencil"></span>
                                                 </a>
