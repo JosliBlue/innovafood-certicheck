@@ -435,27 +435,13 @@
                 <div class="w-24 h-1 bg-[#4d4341] mx-auto"></div>
             </div>
 
-            <div class="flex justify-center mb-12">
-                <img src="{{ asset('images/ministerio/qr_certificado.jpeg') }}" alt="QR Certificado" class="w-48 h-48 object-contain rounded-lg">
-            </div>
-
-            <div class="flex flex-wrap md:flex-nowrap gap-4 items-stretch">
-                <!-- Parte 1: 1/5 -->
-                <div class="w-full md:w-1/5 flex">
-                    <img src="{{ asset('images/ministerio/logo_mensaje_parte1.jpeg') }}" alt="Banner Parte 1" class="w-full h-full object-contain rounded-lg">
-                </div>
-                <!-- Parte 2: 2/5 -->
-                <div class="w-full md:w-3/5 flex items-center text-gray-600 text-left p-4 rounded-lg border-l-4 border-yellow-400">
-                    <p>Certificado con <span class="text-yellow-600 font-bold uppercase">respaldo institucional</span>, impartida por <span class="uppercase font-bold">instructor calificado</span> por el <span class="uppercase font-bold">ministerio de trabajo del ecuador</span>, con formación profesional registrada en <span class="text-yellow-600 font-bold uppercase">SENESCYT</span></p>
-                </div>
-                <!-- Parte 3: 1/5 -->
-                <div class="w-full md:w-1/5 flex border-l-4 border-yellow-400">
-                    <img src="{{ asset('images/ministerio/logo_mensaje_parte3.jpeg') }}" alt="Banner Parte 3" class="w-full h-full object-contain rounded-lg">
-                </div>
-                <!-- Parte 4: 1/5 -->
-                <div class="w-full md:w-1/5 flex border-l-4 border-yellow-400">
-                    <img src="{{ asset('images/ministerio/logo_mensaje_parte4.jpeg') }}" alt="Banner Parte 4" class="w-full h-full object-contain rounded-lg">
-                </div>
+            <div class="flex justify-center">
+                <img src="{{ asset('images/AUTORIZACION-MINISTERIO.jpeg') }}"
+                    alt="Respaldo profesional y académico — Ministerio del Trabajo y SENESCYT"
+                    class="w-full h-auto object-contain rounded-xl"
+                    loading="lazy"
+                    width="1600"
+                    height="533">
             </div>
         </div>
     </section>
