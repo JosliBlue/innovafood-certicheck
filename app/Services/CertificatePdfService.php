@@ -197,7 +197,7 @@ class CertificatePdfService
             'font_color' => $field['font_color'] ?? '#111111',
             'font_weight' => $field['font_weight'] ?? 'normal',
             'font_css_family' => $fontDef['css_family'],
-            'text_align' => 'left',
+            'text_align' => 'center',
         ];
     }
 

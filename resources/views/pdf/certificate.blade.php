@@ -56,6 +56,7 @@
             white-space: normal;
             box-sizing: border-box;
             vertical-align: top;
+            text-align: center;
         }
     </style>
 </head>
