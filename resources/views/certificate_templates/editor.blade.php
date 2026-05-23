@@ -103,7 +103,7 @@
                                     $k = $row['field_key'];
                                 @endphp
                                 <div role="button" tabindex="0" data-cert-field="{{ $k }}"
-                                    class="cert-field absolute z-10 box-border m-0 p-0 text-white shadow-lg cursor-grab active:cursor-grabbing text-left overflow-hidden hover:bg-black/65 transition-colors">
+                                    class="cert-field absolute z-10 box-border m-0 p-0 text-white shadow-lg cursor-grab active:cursor-grabbing text-center overflow-hidden hover:bg-black/65 transition-colors">
                                     <span class="pointer-events-none block truncate leading-none">{{ $row['label'] }}</span>
                                 </div>
                             @endforeach
@@ -229,6 +229,7 @@
         .cert-field {
             display: block;
             line-height: 1;
+            text-align: center;
             background: rgba(0, 0, 0, 0.45);
             outline: 2px dashed rgba(255, 255, 255, 0.9);
             outline-offset: -2px;
@@ -361,7 +362,7 @@
                     const cssFam = CERT_FONT_CSS[f.font_family];
                     btn.style.fontFamily = cssFam ? ("'" + cssFam + "', DejaVu Sans, sans-serif") : 'DejaVu Sans, sans-serif';
                     btn.style.color = '#ffffff';
-                    btn.style.textAlign = 'left';
+                    btn.style.textAlign = 'center';
                     btn.style.height = (h / DESIGN_H * 100) + '%';
                     btn.style.lineHeight = '1';
                     btn.style.padding = '0';
