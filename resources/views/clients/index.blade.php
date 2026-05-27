@@ -143,7 +143,7 @@
                                         <td class="px-6 py-4">
                                             <div class="flex items-center gap-3">
                                                 <div class="w-10 h-10 rounded-xl flex items-center justify-center font-black text-white shadow-sm {{ $styles['bg'] }} shrink-0">
-                                                    {{ substr($client->first_names, 0, 1) }}{{ substr($client->last_names, 0, 1) }}
+                                                    {{ $client->initials() }}
                                                 </div>
                                                 <div>
                                                     <p class="font-bold text-gray-900 group-hover:text-primary transition-colors leading-snug">{{ $client->full_name }}</p>

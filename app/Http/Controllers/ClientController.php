@@ -22,8 +22,7 @@ class ClientController extends Controller
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('id_card', 'like', '%'.$search.'%')
-                    ->orWhere('first_names', 'like', '%'.$search.'%')
-                    ->orWhere('last_names', 'like', '%'.$search.'%');
+                    ->orWhere('full_name', 'like', '%'.$search.'%');
             });
         }
 
@@ -41,7 +40,8 @@ class ClientController extends Controller
         $active = $total - $expired;
 
         $clients = (clone $query)
-            ->orderBy('last_names')
+            ->orderByDesc('created_at')
+            ->orderBy('full_name')
             ->paginate(20)
             ->withQueryString();
 
