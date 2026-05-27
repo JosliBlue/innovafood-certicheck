@@ -16,8 +16,7 @@ class StoreClientRequest extends FormRequest
     {
         return [
             'id_card' => ['required', 'string', 'max:20'],
-            'last_names' => ['required', 'string', 'max:150'],
-            'first_names' => ['required', 'string', 'max:150'],
+            'full_name' => ['required', 'string', 'max:300'],
             'course_name' => ['required', 'string', 'max:150'],
             'finished_at' => ['required', 'date'],
             'academic_hours' => ['required', 'integer', 'min:10', 'max:100'],
@@ -29,8 +28,7 @@ class StoreClientRequest extends FormRequest
     {
         return [
             'id_card.required' => 'La cédula es obligatoria.',
-            'last_names.required' => 'Los apellidos son obligatorios.',
-            'first_names.required' => 'Los nombres son obligatorios.',
+            'full_name.required' => 'El nombre completo es obligatorio.',
             'course_name.required' => 'El nombre del curso es obligatorio.',
             'finished_at.required' => 'La fecha de finalización es obligatoria.',
             'finished_at.date' => 'La fecha de finalización no es válida.',

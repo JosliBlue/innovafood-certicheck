@@ -13,22 +13,13 @@
     @enderror
 </div>
 
-{{-- Apellidos --}}
+{{-- Nombre completo --}}
 <div class="flex flex-col gap-1">
-    <label for="last_names" class="text-xs font-bold text-primary uppercase tracking-wide">Apellidos</label>
-    <input id="last_names" type="text" name="last_names" value="{{ old('last_names', $client->last_names ?? '') }}"
-        class="border {{ $errors->has('last_names') ? 'border-red-400' : 'border-gray-200' }} rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
-    @error('last_names')
-        <p class="text-red-500 text-xs">{{ $message }}</p>
-    @enderror
-</div>
-
-{{-- Nombres --}}
-<div class="flex flex-col gap-1">
-    <label for="first_names" class="text-xs font-bold text-primary uppercase tracking-wide">Nombres</label>
-    <input id="first_names" type="text" name="first_names" value="{{ old('first_names', $client->first_names ?? '') }}"
-        class="border {{ $errors->has('first_names') ? 'border-red-400' : 'border-gray-200' }} rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
-    @error('first_names')
+    <label for="full_name" class="text-xs font-bold text-primary uppercase tracking-wide">Nombre completo</label>
+    <input id="full_name" type="text" name="full_name" value="{{ old('full_name', $client->full_name ?? '') }}"
+        placeholder="Ej. Juan Carlos Pérez Gómez"
+        class="border {{ $errors->has('full_name') ? 'border-red-400' : 'border-gray-200' }} rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
+    @error('full_name')
         <p class="text-red-500 text-xs">{{ $message }}</p>
     @enderror
 </div>

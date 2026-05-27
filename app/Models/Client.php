@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Client extends Model
 {
     protected $fillable = [
         'id_card',
-        'last_names',
-        'first_names',
+        'full_name',
         'course_name',
         'finished_at',
         'academic_hours',
@@ -27,10 +25,18 @@ class Client extends Model
         ];
     }
 
-    protected function fullName(): Attribute
+    public function initials(): string
     {
-        return Attribute::make(
-            get: fn () => "{$this->first_names} {$this->last_names}",
-        );
+        $parts = preg_split('/\s+/', trim($this->full_name), -1, PREG_SPLIT_NO_EMPTY);
+
+        if ($parts === []) {
+            return '?';
+        }
+
+        if (count($parts) === 1) {
+            return strtoupper(substr($parts[0], 0, 2));
+        }
+
+        return strtoupper(substr($parts[0], 0, 1).substr($parts[count($parts) - 1], 0, 1));
     }
 }
