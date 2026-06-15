@@ -24,6 +24,7 @@ class CertificateTemplate extends Model
         'full_name',
         'id_card',
         'finished_at',
+        'started_at',
     ];
 
     /** @var array<string, string> */
@@ -31,6 +32,7 @@ class CertificateTemplate extends Model
         'full_name' => 'Nombres y apellidos',
         'id_card' => 'Cédula',
         'finished_at' => 'Fecha de finalización',
+        'started_at' => 'Fecha de inicio',
     ];
 
     protected $fillable = [
@@ -112,6 +114,16 @@ class CertificateTemplate extends Model
                 'field_key' => 'finished_at',
                 'x' => 400,
                 'y' => 1100,
+                'width' => 2170,
+                'font_size' => 75,
+                'font_color' => '#333333',
+                'font_weight' => 'normal',
+                'font_family' => 'dejavu_sans',
+            ],
+            'started_at' => [
+                'field_key' => 'started_at',
+                'x' => 400,
+                'y' => 1250,
                 'width' => 2170,
                 'font_size' => 75,
                 'font_color' => '#333333',

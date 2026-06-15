@@ -174,6 +174,14 @@ class CertificatePdfService
             'full_name' => trim($client->full_name),
             'id_card' => $client->id_card,
             'finished_at' => $client->finished_at->format('d/m/Y'),
+            'started_at' => $client->finished_at
+                ? (function () use ($client) {
+                    $seed = $client->id ?? crc32($client->id_card ?? 'default');
+                    $daysBefore = 30 + (abs((int) $seed) % 3);
+
+                    return $client->finished_at->copy()->subDays($daysBefore)->format('d/m/Y');
+                })()
+                : '',
             default => '',
         };
 
