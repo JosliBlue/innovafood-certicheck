@@ -173,7 +173,7 @@ class CertificatePdfService
         $value = match ($key) {
             'full_name' => trim($client->full_name),
             'id_card' => $client->id_card,
-            'finished_at' => $client->finished_at->format('d/m/Y'),
+            'finished_at' => $client->finished_at->copy()->addYear()->format('d/m/Y'),
             'started_at' => $client->finished_at
                 ? (function () use ($client) {
                     $seed = $client->id ?? crc32($client->id_card ?? 'default');
@@ -202,7 +202,7 @@ class CertificatePdfService
             'width_mm' => $this->designToMm($field['width'] ?? 100),
             'font_size_mm' => $fontSizeMm,
             'line_height_mm' => $fontSizeMm,
-            'font_color' => $field['font_color'] ?? '#111111',
+            'font_color' => $key === 'finished_at' ? '#dc2626' : ($field['font_color'] ?? '#111111'),
             'font_weight' => $field['font_weight'] ?? 'normal',
             'font_css_family' => $fontDef['css_family'],
             'text_align' => 'center',

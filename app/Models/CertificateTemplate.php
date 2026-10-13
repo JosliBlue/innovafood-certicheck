@@ -31,7 +31,7 @@ class CertificateTemplate extends Model
     public const FIELD_LABELS = [
         'full_name' => 'Nombres y apellidos',
         'id_card' => 'Cédula',
-        'finished_at' => 'Fecha de finalización',
+        'finished_at' => 'Fecha de caducidad del certificado',
         'started_at' => 'Fecha de inicio',
     ];
 

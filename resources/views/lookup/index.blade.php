@@ -531,8 +531,8 @@
                                             <span class="font-black text-gray-800 bg-white px-3 py-1 rounded-lg border border-gray-100 shadow-sm">{{ \Carbon\Carbon::parse($record->finished_at)->format('d/m/Y') }}</span>
                                         </div>
                                         <div class="flex justify-between items-center text-sm">
-                                            <span class="font-bold text-gray-500">Curso válido hasta:</span>
-                                            <span class="font-black {{ $styles['text'] }} bg-white px-3 py-1 rounded-lg border {{ $styles['border'] }} shadow-sm">{{ $expirationDate->format('d/m/Y') }}</span>
+                                            <span class="font-bold text-red-600">Fecha de caducidad del certificado:</span>
+                                            <span class="font-black text-red-600 bg-white px-3 py-1 rounded-lg border border-red-200 shadow-sm">{{ $expirationDate->format('d/m/Y') }}</span>
                                         </div>
                                         @if($isExpired)
                                             <div class="mt-4 text-center">
