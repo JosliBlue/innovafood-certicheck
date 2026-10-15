@@ -70,18 +70,28 @@
         @endif
 
         @foreach ($pdf_fields as $field)
+            @if (($field['page'] ?? 'front') === 'front')
             <div class="field"
                 style="left: {{ $field['x_mm'] }}mm; top: {{ $field['y_mm'] }}mm; width: {{ $field['width_mm'] }}mm; height: {{ $field['line_height_mm'] }}mm; font-size: {{ $field['font_size_mm'] }}mm; line-height: {{ $field['line_height_mm'] }}mm; color: {{ $field['font_color'] }}; font-weight: {{ $field['font_weight'] }}; font-family: '{{ $field['font_css_family'] }}', DejaVu Sans, sans-serif; text-align: {{ $field['text_align'] }};">
                 {{ $field['value'] }}
             </div>
+            @endif
         @endforeach
     </div>
 
-    @if (!empty($background_back_data_uri))
+    @if (!empty($background_back_data_uri) || collect($pdf_fields)->contains('page', 'back'))
         <div class="page">
             <div class="bg">
                 <img src="{{ $background_back_data_uri }}" alt="">
             </div>
+            @foreach ($pdf_fields as $field)
+                @if (($field['page'] ?? 'front') === 'back')
+                    <div class="field"
+                        style="left: {{ $field['x_mm'] }}mm; top: {{ $field['y_mm'] }}mm; width: {{ $field['width_mm'] }}mm; height: {{ $field['line_height_mm'] }}mm; font-size: {{ $field['font_size_mm'] }}mm; line-height: {{ $field['line_height_mm'] }}mm; color: {{ $field['font_color'] }}; font-weight: {{ $field['font_weight'] }}; font-family: '{{ $field['font_css_family'] }}', DejaVu Sans, sans-serif; text-align: {{ $field['text_align'] }};">
+                        {{ $field['value'] }}
+                    </div>
+                @endif
+            @endforeach
         </div>
     @endif
 </body>

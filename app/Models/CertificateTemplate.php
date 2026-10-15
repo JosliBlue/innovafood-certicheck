@@ -87,13 +87,14 @@ class CertificateTemplate extends Model
      *
      * font_family: clave en config/certificate_fonts.php → families.
      *
-     * @return array<string, array{field_key: string, x: float, y: float, width: float, font_size: float, font_color: string, font_weight: string, font_family: string}>
+     * @return array<string, array{field_key: string, page: string, x: float, y: float, width: float, font_size: float, font_color: string, font_weight: string, font_family: string}>
      */
     public static function defaultFieldsKeyed(): array
     {
         return [
             'full_name' => [
                 'field_key' => 'full_name',
+                'page' => 'front',
                 'x' => 400,
                 'y' => 700,
                 'width' => 2170,
@@ -104,6 +105,7 @@ class CertificateTemplate extends Model
             ],
             'id_card' => [
                 'field_key' => 'id_card',
+                'page' => 'front',
                 'x' => 400,
                 'y' => 920,
                 'width' => 2170,
@@ -114,6 +116,7 @@ class CertificateTemplate extends Model
             ],
             'finished_at' => [
                 'field_key' => 'finished_at',
+                'page' => 'front',
                 'x' => 400,
                 'y' => 1100,
                 'width' => 2170,
@@ -124,6 +127,7 @@ class CertificateTemplate extends Model
             ],
             'started_at' => [
                 'field_key' => 'started_at',
+                'page' => 'front',
                 'x' => 400,
                 'y' => 1250,
                 'width' => 2170,
@@ -134,6 +138,7 @@ class CertificateTemplate extends Model
             ],
             'expires_at' => [
                 'field_key' => 'expires_at',
+                'page' => 'back',
                 'x' => 400,
                 'y' => 1400,
                 'width' => 2170,

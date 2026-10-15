@@ -197,6 +197,7 @@ class CertificatePdfService
 
         return [
             'field_key' => $key,
+            'page' => ($field['page'] ?? 'front') === 'back' ? 'back' : 'front',
             'value' => $value,
             'x_mm' => $this->designToMm($field['x'] ?? 0),
             'y_mm' => $this->designToMm($yDesign),
