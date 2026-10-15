@@ -28,6 +28,7 @@ class UpdateCertificateTemplateFieldsRequest extends FormRequest
 
         foreach (CertificateTemplate::FIELD_KEYS as $key) {
             $rules["fields.{$key}.field_key"] = ['required', Rule::in(CertificateTemplate::FIELD_KEYS)];
+            $rules["fields.{$key}.page"] = ['required', Rule::in(['front', 'back'])];
             $rules["fields.{$key}.x"] = ['required', 'numeric', 'min:0', 'max:'.CertificateTemplate::DESIGN_WIDTH];
             $rules["fields.{$key}.y"] = ['required', 'numeric', 'min:0', 'max:'.CertificateTemplate::DESIGN_HEIGHT];
             $rules["fields.{$key}.width"] = ['required', 'numeric', 'min:20', 'max:'.CertificateTemplate::DESIGN_WIDTH];

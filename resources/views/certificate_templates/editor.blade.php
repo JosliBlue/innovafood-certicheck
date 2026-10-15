@@ -34,7 +34,7 @@
             <p class="max-w-6xl mx-auto mt-4 text-white/55 text-[11px] font-semibold leading-relaxed">
                 Misma grilla que los carnets Ligatactica: el lienzo mide <strong class="text-white/80">{{ $DW }}×{{ $DH }}</strong>
                 unidades de diseño; en PDF cada unidad equivale a <strong class="text-white/80">{{ \App\Models\CertificateTemplate::DESIGN_TO_MM }} mm</strong>.
-                Arrastra cada etiqueta sobre la <strong class="text-white/80">página 1</strong> (nombres y apellidos, cédula, fecha de inicio, finalización y caducidad); en el panel puedes subir la <strong class="text-white/80">página 2</strong> para un PDF de dos hojas.
+                Arrastra cada etiqueta sobre su página; la fecha de caducidad se coloca en la <strong class="text-white/80">página 2</strong>. En el panel puedes subir la imagen de la página 2 para un PDF de dos hojas.
             </p>
         </header>
 
@@ -103,6 +103,7 @@
                                     $k = $row['field_key'];
                                 @endphp
                                 <div role="button" tabindex="0" data-cert-field="{{ $k }}"
+                                    data-cert-page="{{ $row['page'] ?? 'front' }}"
                                     class="cert-field absolute z-10 box-border m-0 p-0 text-white shadow-lg cursor-grab active:cursor-grabbing text-center overflow-hidden hover:bg-black/65 transition-colors">
                                     <span class="pointer-events-none block truncate leading-none">{{ $row['label'] }}</span>
                                 </div>
@@ -152,7 +153,7 @@
                         ])
                     </div>
 
-                    <p class="text-[10px] font-extrabold text-primary/60 uppercase tracking-widest">Campos de la página 1</p>
+                    <p class="text-[10px] font-extrabold text-primary/60 uppercase tracking-widest">Campos del certificado</p>
 
                     @foreach ($editorRows as $row)
                         @php $fk = $row['field_key']; @endphp
@@ -166,6 +167,14 @@
                             </summary>
                             <div class="p-4 space-y-3 border-t border-gray-100/90">
                                 <input type="hidden" name="fields[{{ $fk }}][field_key]" value="{{ $fk }}">
+                                <div>
+                                    <label class="text-[9px] font-bold text-gray-400 uppercase">Cara</label>
+                                    <select name="fields[{{ $fk }}][page]"
+                                        class="js-cert-page js-cert-sync w-full px-2 py-2 rounded-xl border border-gray-100 text-xs font-bold">
+                                        <option value="front" @selected(old('fields.'.$fk.'.page', $row['page'] ?? 'front') === 'front')>Página 1</option>
+                                        <option value="back" @selected(old('fields.'.$fk.'.page', $row['page'] ?? 'front') === 'back')>Página 2</option>
+                                    </select>
+                                </div>
                                 <input type="hidden" name="fields[{{ $fk }}][x]" value="{{ old('fields.'.$fk.'.x', $row['x']) }}" data-axis="x">
                                 <input type="hidden" name="fields[{{ $fk }}][y]" value="{{ old('fields.'.$fk.'.y', $row['y']) }}" data-axis="y">
 
@@ -286,8 +295,11 @@
                 if (bgBackEmpty) bgBackEmpty.classList.toggle('hidden', isFront || (bgBack && bgBack.getAttribute('src')));
 
                 inner.querySelectorAll('[data-cert-field]').forEach((btn) => {
-                    btn.classList.toggle('hidden', !isFront);
-                    btn.style.pointerEvents = isFront ? '' : 'none';
+                    const fieldPage = btn.getAttribute('data-cert-page') || 'front';
+                    const isOnActivePage = fieldPage === side;
+                    btn.classList.toggle('hidden', !isOnActivePage);
+                    btn.style.pointerEvents = isOnActivePage ? '' : 'none';
+                    btn.style.display = isOnActivePage ? 'block' : 'none';
                 });
 
                 sideTabs.forEach((tab) => {
@@ -328,8 +340,10 @@
                     const el = form.querySelector('[name="fields[' + key + '][' + axis + ']"]');
                     return el ? parseFloat(el.value) : 0;
                 };
+                const pageElement = form.querySelector('[name="fields[' + key + '][page]"]');
                 return {
                     key,
+                    page: pageElement ? pageElement.value : 'front',
                     x: num('x'),
                     y: num('y'),
                     width: num('width'),
@@ -353,6 +367,9 @@
                     const f = readField(key);
                     const h = fieldHeight(f.font_size);
 
+                    btn.setAttribute('data-cert-page', f.page);
+                    btn.classList.toggle('hidden', f.page !== activeSide);
+                    btn.style.pointerEvents = f.page === activeSide ? '' : 'none';
                     btn.style.left = (f.x / DESIGN_W * 100) + '%';
                     btn.style.top = (f.y / DESIGN_H * 100) + '%';
                     btn.style.width = (f.width / DESIGN_W * 100) + '%';
@@ -368,7 +385,7 @@
                     btn.style.padding = '0';
                     btn.style.margin = '0';
                     btn.style.boxSizing = 'border-box';
-                    btn.style.display = 'block';
+                    btn.style.display = f.page === activeSide ? 'block' : 'none';
 
                     btn.classList.remove('ring-4', 'ring-emerald-400', 'z-20');
                     btn.classList.add('z-10');
@@ -377,14 +394,17 @@
 
             form.querySelectorAll('.js-cert-sync').forEach((el) => {
                 el.addEventListener('input', syncBoxes);
-                el.addEventListener('change', syncBoxes);
+                el.addEventListener('change', () => {
+                    syncBoxes();
+                    setActiveSide(activeSide);
+                });
             });
 
             let drag = null;
 
             inner.querySelectorAll('[data-cert-field]').forEach((btn) => {
                 btn.addEventListener('pointerdown', (ev) => {
-                    if (activeSide !== 'front') return;
+                    if (btn.classList.contains('hidden')) return;
                     ev.preventDefault();
                     const key = btn.getAttribute('data-cert-field');
                     btn.setPointerCapture(ev.pointerId);
