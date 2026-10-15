@@ -34,7 +34,7 @@
             <p class="max-w-6xl mx-auto mt-4 text-white/55 text-[11px] font-semibold leading-relaxed">
                 Misma grilla que los carnets Ligatactica: el lienzo mide <strong class="text-white/80">{{ $DW }}×{{ $DH }}</strong>
                 unidades de diseño; en PDF cada unidad equivale a <strong class="text-white/80">{{ \App\Models\CertificateTemplate::DESIGN_TO_MM }} mm</strong>.
-                Arrastra cada etiqueta sobre la <strong class="text-white/80">página 1</strong> (nombres y apellidos, cédula, fecha de finalización); en el panel puedes subir la <strong class="text-white/80">página 2</strong> para un PDF de dos hojas.
+                Arrastra cada etiqueta sobre la <strong class="text-white/80">página 1</strong> (nombres y apellidos, cédula, fecha de inicio, finalización y caducidad); en el panel puedes subir la <strong class="text-white/80">página 2</strong> para un PDF de dos hojas.
             </p>
         </header>
 
